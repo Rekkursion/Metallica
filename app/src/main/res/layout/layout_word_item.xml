@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:padding="@dimen/dim_word_item_spacing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <!-- things on the left-side -->
+    <LinearLayout
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <!-- english word -->
+        <TextView
+                android:id="@+id/txtv_english_word_at_word_item"
+                android:gravity="center"
+                android:layout_marginEnd="@dimen/dim_word_item_spacing"
+                android:textSize="@dimen/dim_word_item_english_word_text_size"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <!-- part of speech -->
+        <TextView
+                android:id="@+id/txtv_part_of_speech_at_word_item"
+                android:gravity="center"
+                android:layout_marginEnd="@dimen/dim_word_item_spacing"
+                android:textSize="@dimen/dim_general_text_size"
+                android:textColor="@android:color/darker_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <!-- chinese meaning -->
+        <TextView
+                android:id="@+id/txtv_chinese_meaning_at_word_item"
+                android:gravity="center"
+                android:textSize="@dimen/dim_general_text_size"
+                android:textColor="@android:color/darker_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- popup-menu button on the right-side -->
+    <ImageButton
+            android:id="@+id/imgbtn_more_at_word_item"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+</RelativeLayout>

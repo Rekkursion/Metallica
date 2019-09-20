@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Metallica</string>
+    <string name="action_settings">設置</string>
+
+    <string name="str_error_when_inserting_data">在插入數據時發生錯誤。</string>
+    <string name="str_english_word">單詞</string>
+    <string name="str_part_of_speech">詞性</string>
+    <string name="str_chinese_meaning">意思</string>
+    <string name="str_remark">其他</string>
+
+    <string name="str_adding_english_word_hint">Enter a word here.</string>
+    <string name="str_adding_chinese_meaning_hint">What does this word mean?</string>
+    <string name="str_adding_remark_hint">Example sentence, notes, or anything else.</string>
+
+    <string name="str_cancel">取消</string>
+    <string name="str_submit">送出</string>
+    <string name="str_add_new_word_successfully">成功加入</string>
+</resources>

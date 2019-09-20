@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="dim_fab_margin">18dp</dimen>
+    <dimen name="dim_general_margin">10dp</dimen>
+    <dimen name="dim_general_text_size">16sp</dimen>
+
+    <dimen name="dim_spacing_between_label_and_edit_text">10dp</dimen>
+    <dimen name="dim_button_bar_text_size">22sp</dimen>
+
+    <dimen name="dim_word_item_english_word_text_size">22sp</dimen>
+    <dimen name="dim_word_item_spacing">6dp</dimen>
+
+</resources>
