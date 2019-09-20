@@ -12,7 +12,8 @@
             android:layout_alignParentTop="true"
             android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
         
         <LinearLayout
                 android:orientation="vertical"
@@ -23,7 +24,7 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_margin="@dimen/dim_general_margin"
-                    android:weightSum="10"
+                    android:weightSum="15"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -31,8 +32,7 @@
                         android:id="@+id/txtv_english_word_when_adding"
                         android:text="@string/str_english_word"
                         android:textSize="@dimen/dim_general_text_size"
-                        android:layout_marginEnd="@dimen/dim_spacing_between_label_and_edit_text"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
 
@@ -42,70 +42,35 @@
                         android:textSize="@dimen/dim_general_text_size"
                         android:inputType="text"
                         android:importantForAutofill="no"
-                        android:layout_weight="7"
+                        android:layout_weight="13"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- part of speech -->
+            <!-- container of part of speeches & chinese meanings -->
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_margin="@dimen/dim_general_margin"
-                    android:weightSum="10"
+                    android:id="@+id/lly_speeches_and_meanings_container"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                <TextView
-                        android:id="@+id/txtv_part_of_speech_when_adding"
-                        android:text="@string/str_part_of_speech"
-                        android:textSize="@dimen/dim_general_text_size"
-                        android:layout_marginEnd="@dimen/dim_spacing_between_label_and_edit_text"
-                        android:layout_weight="3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spn_part_of_speech_when_adding"
-                        android:spinnerMode="dropdown"
-                        android:importantForAutofill="no"
-                        android:layout_weight="7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- chinese meaning -->
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_margin="@dimen/dim_general_margin"
-                    android:weightSum="10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                        android:id="@+id/txtv_chinese_meaning_when_adding"
-                        android:text="@string/str_chinese_meaning"
-                        android:textSize="@dimen/dim_general_text_size"
-                        android:layout_marginEnd="@dimen/dim_spacing_between_label_and_edit_text"
-                        android:layout_weight="3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" />
-
-                <EditText
-                        android:id="@+id/edt_chinese_meaning_when_adding"
-                        android:hint="@string/str_adding_chinese_meaning_hint"
-                        android:textSize="@dimen/dim_general_text_size"
-                        android:inputType="text"
-                        android:importantForAutofill="no"
-                        android:layout_weight="7"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" />
-            </LinearLayout>
+            <!-- button of adding new meaning -->
+            <Button
+                    android:id="@+id/btn_add_new_speech_and_meaning"
+                    android:text="@string/str_add_new_part_of_speech_and_chinese_meaning"
+                    android:layout_gravity="end"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             <!-- remark -->
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_margin="@dimen/dim_general_margin"
-                    android:weightSum="10"
+                    android:weightSum="15"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -113,8 +78,7 @@
                         android:id="@+id/txtv_remark_when_adding"
                         android:text="@string/str_remark"
                         android:textSize="@dimen/dim_general_text_size"
-                        android:layout_marginEnd="@dimen/dim_spacing_between_label_and_edit_text"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
 
@@ -124,38 +88,37 @@
                         android:textSize="@dimen/dim_general_text_size"
                         android:inputType="textMultiLine"
                         android:importantForAutofill="no"
-                        android:layout_weight="7"
+                        android:layout_weight="13"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
             </LinearLayout>
+
+            <!-- cancel & submit buttons -->
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/buttonBarStyle">
+
+                <Button
+                        android:id="@+id/btn_cancel_when_adding"
+                        android:text="@string/str_cancel"
+                        android:textSize="@dimen/dim_button_bar_text_size"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle" />
+
+                <Button
+                        android:id="@+id/btn_submit_when_adding"
+                        android:text="@string/str_submit"
+                        android:textSize="@dimen/dim_button_bar_text_size"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/buttonBarButtonStyle" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <!-- cancel & submit buttons -->
-    <LinearLayout
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/buttonBarStyle">
-
-        <Button
-                android:id="@+id/btn_cancel_when_adding"
-                android:text="@string/str_cancel"
-                android:textSize="@dimen/dim_button_bar_text_size"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:attr/buttonBarButtonStyle" />
-
-        <Button
-                android:id="@+id/btn_submit_when_adding"
-                android:text="@string/str_submit"
-                android:textSize="@dimen/dim_button_bar_text_size"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:attr/buttonBarButtonStyle" />
-    </LinearLayout>
 </RelativeLayout>

@@ -34,20 +34,24 @@ class WordItemAdapter(pWordItemList: ArrayList<WordItem>, pContext: Context): Re
         val item = mWordItemList?.get(position)
         val eng = item?.getEnglishWord()
         if (eng != null)
-            holder.setData(eng, item.getPartOfSpeech(), item.getChineseMeaning())
+            holder.setData(eng, item.getPartOfSpeechList(), item.getChineseMeaningList())
     }
 
     // inner class: view-holder
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var txtvEnglishWord: TextView = itemView.findViewById(R.id.txtv_english_word_at_word_item)
-        private var txtvPartOfSpeech: TextView = itemView.findViewById(R.id.txtv_part_of_speech_at_word_item)
-        private var txtvChineseMeaning: TextView = itemView.findViewById(R.id.txtv_chinese_meaning_at_word_item)
+        private var txtvSpeechesAndMeanings: TextView = itemView.findViewById(R.id.txtv_part_of_speeches_and_chinese_meanings_at_word_item)
         private var imgbtnMore: ImageButton = itemView.findViewById(R.id.imgbtn_more_at_word_item)
 
-        fun setData(eng: String, speech: WordItem.PartOfSpeech?, chi: String?) {
+        fun setData(eng: String, speechList: ArrayList<WordItem.PartOfSpeech>?, chiList: ArrayList<String>?) {
             txtvEnglishWord.text = eng
-            txtvPartOfSpeech.text = speech?.abbr ?: "-"
-            txtvChineseMeaning.text = chi ?: ""
+
+            val sBuf = StringBuffer()
+            speechList?.forEachIndexed { index, partOfSpeech ->
+                sBuf.append("${partOfSpeech.abbr} ${chiList?.get(index) ?: ""} ")
+            }
+            txtvSpeechesAndMeanings.text = sBuf.toString()
+
             imgbtnMore.setOnClickListener {
                 // TODO: click on more-button on item
             }

@@ -1,11 +1,10 @@
 package com.rekkursion.metallica.model
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class WordItem(eng: String, speech: PartOfSpeech? = null, chi: String? = null, rmk: String? = null) {
+class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null) {
     enum class PartOfSpeech(val abbr: String) {
         // region speeches
         NOUN("n"),
@@ -29,8 +28,8 @@ class WordItem(eng: String, speech: PartOfSpeech? = null, chi: String? = null, r
     }
 
     private var mEnglishWord: String? = eng
-    private var mPartOfSpeech: PartOfSpeech? = speech
-    private var mChineseMeaning: String? = chi
+    private var mPartOfSpeechList: ArrayList<PartOfSpeech>? = speechList
+    private var mChineseMeaningList: ArrayList<String>? = chiList
     private var mRemark: String? = rmk
     private var mLocalDateTime: LocalDateTime = LocalDateTime.now()
 
@@ -38,9 +37,27 @@ class WordItem(eng: String, speech: PartOfSpeech? = null, chi: String? = null, r
         private const val DATE_TIME_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS"
     }
 
-    constructor(eng: String, speechStr: String, chi: String, rmk: String, dateTimeStr: String): this(eng, chi = chi, rmk = rmk) {
+    constructor(eng: String, speech: PartOfSpeech, chi: String, rmk: String, dateTimeStr: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))): this(eng, rmk = rmk) {
         try {
-            mPartOfSpeech = PartOfSpeech.values().filter { it.abbr == speechStr }[0]
+            mPartOfSpeechList = ArrayList()
+            mPartOfSpeechList?.add(speech)
+
+            mChineseMeaningList = ArrayList()
+            mChineseMeaningList?.add(chi)
+        } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
+
+        try {
+            mLocalDateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
+        } catch (e: DateTimeParseException) { e.printStackTrace() }
+    }
+
+    constructor(eng: String, speechStr: String, chi: String, rmk: String, dateTimeStr: String): this(eng, rmk = rmk) {
+        try {
+            mPartOfSpeechList = ArrayList()
+            mPartOfSpeechList?.add(PartOfSpeech.values().filter { it.abbr == speechStr }[0])
+
+            mChineseMeaningList = ArrayList()
+            mChineseMeaningList?.add(chi)
         } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
 
         try {
@@ -51,11 +68,11 @@ class WordItem(eng: String, speech: PartOfSpeech? = null, chi: String? = null, r
     fun getEnglishWord(): String? = mEnglishWord
     fun setEnglishWord(eng: String) { mEnglishWord = eng }
 
-    fun getPartOfSpeech(): PartOfSpeech? = mPartOfSpeech
-    fun setPartOfSpeech(speech: PartOfSpeech) { mPartOfSpeech = speech }
+    fun getPartOfSpeechList(): ArrayList<PartOfSpeech>? = mPartOfSpeechList
+    fun setPartOfSpeechList(speechList: ArrayList<PartOfSpeech>) { mPartOfSpeechList = speechList }
 
-    fun getChineseMeaning(): String? = mChineseMeaning
-    fun setChineseMeaning(chi: String) { mChineseMeaning = chi }
+    fun getChineseMeaningList(): ArrayList<String>? = mChineseMeaningList
+    fun setChineseMeaningList(chiList: ArrayList<String>) { mChineseMeaningList = chiList }
 
     fun getRemark(): String? = mRemark
     fun setRemark(rmk: String) { mRemark = rmk }

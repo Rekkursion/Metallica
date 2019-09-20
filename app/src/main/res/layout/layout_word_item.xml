@@ -22,20 +22,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        <!-- part of speech -->
+        <!-- part of speeches & chinese meanings -->
         <TextView
-                android:id="@+id/txtv_part_of_speech_at_word_item"
+                android:id="@+id/txtv_part_of_speeches_and_chinese_meanings_at_word_item"
                 android:gravity="center"
                 android:layout_marginEnd="@dimen/dim_word_item_spacing"
-                android:textSize="@dimen/dim_general_text_size"
-                android:textColor="@android:color/darker_gray"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        <!-- chinese meaning -->
-        <TextView
-                android:id="@+id/txtv_chinese_meaning_at_word_item"
-                android:gravity="center"
                 android:textSize="@dimen/dim_general_text_size"
                 android:textColor="@android:color/darker_gray"
                 android:layout_width="wrap_content"
