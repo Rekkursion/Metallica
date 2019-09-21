@@ -3,6 +3,7 @@ package com.rekkursion.metallica
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
@@ -11,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.activity.WordAddingActivity
-import com.rekkursion.metallica.adapter.WordItemAdapter
-import com.rekkursion.metallica.model.WordItem
+import com.rekkursion.metallica.manager.SerializationManager
 
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         initEvents()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         mRecvWordList.layoutManager = layoutManager
 
         // initially load all words from the database
-        WordsManager.loadAllWordsFromDatabase(this, true)
+        WordsManager.loadAllWordsBySerialization(this, true)
 
         // set adapter on recv
         WordsManager.setAdapterOnWordRecyclerView(this, mRecvWordList)

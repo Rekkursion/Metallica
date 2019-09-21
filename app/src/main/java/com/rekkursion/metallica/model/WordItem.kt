@@ -1,10 +1,11 @@
 package com.rekkursion.metallica.model
 
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null) {
+class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null): Serializable {
     enum class PartOfSpeech(val abbr: String) {
         // region speeches
         NOUN("n"),
@@ -27,15 +28,16 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
         // endregion
     }
 
+    companion object {
+        private const val serialVersionUID = 8829975621220483374L
+        private const val DATE_TIME_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS"
+    }
+
     private var mEnglishWord: String? = eng
     private var mPartOfSpeechList: ArrayList<PartOfSpeech>? = speechList
     private var mChineseMeaningList: ArrayList<String>? = chiList
     private var mRemark: String? = rmk
     private var mLocalDateTime: LocalDateTime = LocalDateTime.now()
-
-    companion object {
-        private const val DATE_TIME_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS"
-    }
 
     constructor(eng: String, speech: PartOfSpeech, chi: String, rmk: String, dateTimeStr: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))): this(eng, rmk = rmk) {
         try {
