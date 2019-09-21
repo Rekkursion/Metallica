@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+            android:id="@+id/btn_add_new_classification"
+            android:text="@string/str_add_new_classification"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/dim_general_text_size"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <Button
+            android:id="@+id/btn_add_new_word"
+            android:text="@string/str_add_new_word"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/dim_general_text_size"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+</LinearLayout>

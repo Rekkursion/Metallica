@@ -10,4 +10,7 @@
     <dimen name="dim_word_item_part_of_speech_and_chinese_meaning_text_size">14sp</dimen>
     <dimen name="dim_word_item_spacing">6dp</dimen>
 
+    <dimen name="dim_classification_item_group_name_text_size">24sp</dimen>
+    <dimen name="dim_classification_item_num_of_words_text_size">14sp</dimen>
+    <dimen name="dim_classification_item_spacing">6dp</dimen>
 </resources>

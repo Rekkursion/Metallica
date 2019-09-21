@@ -100,7 +100,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
         mSkbDifficulty = findViewById(R.id.skb_difficulty_when_adding)
         mTxtvShowSelectedDifficulty = findViewById(R.id.txtv_show_selected_difficulty_when_adding)
 
-        mLlySpeechesAndMeaningsContainer = findViewById(R.id.lly_speeches_and_meanings_container)
+        mLlySpeechesAndMeaningsContainer = findViewById(R.id.lly_speeches_and_meanings_container_when_adding_word)
         mBtnAddNewSpeechAndMeaning = findViewById(R.id.btn_add_new_speech_and_meaning)
 
         mBtnCancel = findViewById(R.id.btn_cancel_when_adding)

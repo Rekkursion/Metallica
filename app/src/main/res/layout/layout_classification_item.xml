@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:padding="@dimen/dim_classification_item_spacing"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <!-- group name -->
+    <TextView
+            android:id="@+id/txtv_group_name_at_classification_item"
+            android:textSize="@dimen/dim_classification_item_group_name_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    <!-- num of words -->
+    <TextView
+            android:id="@+id/txtv_num_of_words_at_classification_item"
+            android:textSize="@dimen/dim_classification_item_num_of_words_text_size"
+            android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+</LinearLayout>

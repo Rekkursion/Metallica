@@ -19,9 +19,7 @@ object WordsManager {
         mWordList.add(item)
 
         // serial out the words
-        val serialOutFile = File(context.filesDir,
-            SERIALIZATION_WORDS_FILENAME
-        )
+        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
         if (!serialOutFile.exists())
             serialOutFile.createNewFile()
         val serialOutSuccessOrNot = SerializationManager.save(getWordList(), serialOutFile.path)
@@ -35,9 +33,7 @@ object WordsManager {
             mWordList.clear()
 
         // load from the serialized file
-        val serialOutFile = File(context.filesDir,
-            SERIALIZATION_WORDS_FILENAME
-        )
+        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
         if (!serialOutFile.exists())
             return
         val loaded = SerializationManager.load<ArrayList<WordItem> >(serialOutFile.path)

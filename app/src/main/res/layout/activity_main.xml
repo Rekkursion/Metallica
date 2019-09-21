@@ -27,7 +27,7 @@
 
     <!-- fab for adding new entry -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_new_word"
+            android:id="@+id/fab_add_new_word_or_classification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

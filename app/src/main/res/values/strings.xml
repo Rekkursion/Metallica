@@ -3,11 +3,12 @@
     <string name="action_settings">設置</string>
 
     <string name="str_error_when_inserting_data">在插入數據時發生錯誤。</string>
-    <string name="str_english_word">單詞</string>
+
+    <string name="str_english_word">單字</string>
     <string name="str_part_of_speech">詞性</string>
     <string name="str_chinese_meaning">意義</string>
     <string name="str_part_of_speech_and_chinese_meaning">意義</string>
-    <string name="str_add_new_part_of_speech_and_chinese_meaning">新增</string>
+    <string name="str_add_new_part_of_speech_and_chinese_meaning">新增單字意義</string>
     <string name="str_difficulty">難度</string>
     <string name="str_difficulty_0star">零星</string>
     <string name="str_difficulty_1star">一星</string>
@@ -15,6 +16,8 @@
     <string name="str_difficulty_3stars">三星</string>
     <string name="str_difficulty_4stars">四星</string>
     <string name="str_difficulty_5stars">五星</string>
+    <string name="str_classification">分類</string>
+    <string name="str_add_classification_when_adding_word">加入分類</string>
     <string name="str_remark">備註</string>
 
     <string name="str_adding_english_word_hint">Enter a word here.</string>
@@ -23,5 +26,13 @@
 
     <string name="str_cancel">取消</string>
     <string name="str_submit">送出</string>
-    <string name="str_add_new_word_successfully">成功加入</string>
+    <string name="str_add_new_word_or_classification_successfully">成功加入</string>
+
+    <string name="str_unclassified">未分類</string>
+
+    <string name="str_add_new_word">新增單字</string>
+    <string name="str_add_new_classification">新增分類</string>
+    <string name="str_group_name">名稱</string>
+
+    <string name="str_adding_group_name_hint">分類群組的名稱</string>
 </resources>

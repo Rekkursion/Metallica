@@ -49,7 +49,7 @@
 
             <!-- container of part of speeches & chinese meanings -->
             <LinearLayout
-                    android:id="@+id/lly_speeches_and_meanings_container"
+                    android:id="@+id/lly_speeches_and_meanings_container_when_adding_word"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -101,6 +101,51 @@
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- classification -->
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_margin="@dimen/dim_general_margin"
+                    android:weightSum="15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/txtv_classification_when_adding_word"
+                        android:text="@string/str_classification"
+                        android:textSize="@dimen/dim_general_text_size"
+                        android:layout_marginTop="14dp"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                    <!-- container of added classifications -->
+                    <LinearLayout
+                            android:id="@+id/lly_added_classifications_container_when_adding_word"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                    </LinearLayout>
+
+                    <!-- add new classification for this word -->
+                    <Button
+                            android:id="@+id/btn_add_new_classification_when_adding_word"
+                            android:text="@string/str_add_classification_when_adding_word"
+                            android:textColor="@color/colorAccent"
+                            android:layout_gravity="start"
+                            android:paddingStart="18dp"
+                            android:paddingEnd="18dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- remark -->

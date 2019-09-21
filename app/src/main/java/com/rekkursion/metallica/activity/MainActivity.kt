@@ -3,28 +3,31 @@ package com.rekkursion.metallica.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.LinearLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.R
-import com.rekkursion.metallica.listener.WordItemClickListener
+import com.rekkursion.metallica.fragment.ClassificationListFragment
+import com.rekkursion.metallica.manager.ClassificationManager
 import com.rekkursion.metallica.manager.WordsManager
+import com.rekkursion.metallica.view.WhatToAddDialog
 
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity() {
     companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
         private const val RC_TO_WORD_ADDING_ACTIVITY: Int = 4731
+        private const val RC_TO_CLASSIFICATION_ADDING_ACTIVITY: Int = 5371
     }
 
-    private lateinit var mFabAddNewWord: FloatingActionButton
-    private lateinit var mRecvWordList: RecyclerView
+    private lateinit var mFabAddNewWordOrClassification: FloatingActionButton
+    private lateinit var mLlyRoot: LinearLayout
+
+    private var mClassificationListFragment: ClassificationListFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,14 @@ class MainActivity: AppCompatActivity() {
 
         initViews()
         initEvents()
+
+        if (savedInstanceState == null) {
+            mClassificationListFragment = ClassificationListFragment.newInstance(this)
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.lly_root_at_main, mClassificationListFragment!!)
+                .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,55 +61,45 @@ class MainActivity: AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_TO_WORD_ADDING_ACTIVITY) {
-            if (resultCode == Activity.RESULT_OK) {
-                Snackbar.make(mFabAddNewWord, getString(R.string.str_add_new_word_successfully) + " " + data?.getStringExtra(
-                    WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
-                WordsManager.setAdapterOnWordRecyclerView(this, mRecvWordList)
+        when (requestCode) {
+            RC_TO_WORD_ADDING_ACTIVITY -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+            RC_TO_CLASSIFICATION_ADDING_ACTIVITY -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(ClassificationManager.NEW_CLASSIFICATION_FIELD), Snackbar.LENGTH_SHORT).show()
+                    mClassificationListFragment?.setAdapterOnClassificationRecyclerView()
+                }
             }
         }
     }
 
     private fun initViews() {
-        mFabAddNewWord = findViewById(R.id.fab_add_new_word)
-        mRecvWordList = findViewById(R.id.recv_word_list)
+        mFabAddNewWordOrClassification = findViewById(R.id.fab_add_new_word_or_classification)
+        mLlyRoot = findViewById(R.id.lly_root_at_main)
     }
 
     private fun initEvents() {
         // click for adding new word
-        mFabAddNewWord.setOnClickListener {
-            val toWordAddingIntent = Intent(this, WordAddingActivity::class.java)
-            startActivityForResult(toWordAddingIntent,
-                RC_TO_WORD_ADDING_ACTIVITY
-            )
+        mFabAddNewWordOrClassification.setOnClickListener {
+            val whatToAddDialog = WhatToAddDialog(this)
+            whatToAddDialog
+                .setOnAddNewClassificationListener(object: WhatToAddDialog.OnAddNewClassificationListener {
+                    override fun onAddNewClassificationClick() {
+                        val toClassificationAddingIntent = Intent(this@MainActivity, ClassificationAddingActivity::class.java)
+                        startActivityForResult(toClassificationAddingIntent, RC_TO_CLASSIFICATION_ADDING_ACTIVITY)
+                    }
+                })
+                .setOnAddNewWordListener(object: WhatToAddDialog.OnAddNewWordListener {
+                    override fun onAddNewWordClick() {
+                        val toWordAddingIntent = Intent(this@MainActivity, WordAddingActivity::class.java)
+                        startActivityForResult(toWordAddingIntent, RC_TO_WORD_ADDING_ACTIVITY)
+                    }
+                })
+                .show()
         }
-
-        // region set click and long-click listener on recv
-        mRecvWordList.addOnItemTouchListener(
-            WordItemClickListener(
-                mRecvWordList,
-                object: WordItemClickListener.OnWordItemClickListener {
-                    override fun onWordItemClick(view: View?, position: Int) {
-
-                    }
-
-                    override fun onWordItemLongClick(view: View?, position: Int) {
-
-                    }
-                }
-            )
-        )
-        // endregion
-
-        // set layout-manager on recv
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = RecyclerView.VERTICAL
-        mRecvWordList.layoutManager = layoutManager
-
-        // initially load all words from the database
-        WordsManager.loadAllWordsBySerialization(this, true)
-
-        // set adapter on recv
-        WordsManager.setAdapterOnWordRecyclerView(this, mRecvWordList)
     }
 }
