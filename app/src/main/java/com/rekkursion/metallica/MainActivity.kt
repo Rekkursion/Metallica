@@ -34,10 +34,6 @@ class MainActivity : AppCompatActivity() {
         initEvents()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -91,13 +92,29 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
         mBtnCancel.setOnClickListener(this)
         mBtnSubmit.setOnClickListener(this)
 
+        // listener of deleting the speech-and-meaning view
+        val onDeleteSpeechAndMeaningWhenAddingViewListener = object: SpeechAndMeaningWhenAddingView.OnDeleteViewButtonClickListener {
+            override fun onDeleteViewButtonClick(objectIndex: Int) {
+                var k = 0
+                while (k < mLlySpeechesAndMeaningsContainer.childCount) {
+                    if ((mLlySpeechesAndMeaningsContainer.getChildAt(k) as SpeechAndMeaningWhenAddingView).getObjectIndex() == objectIndex) {
+                        mLlySpeechesAndMeaningsContainer.removeViewAt(k)
+                        break
+                    }
+                    ++k
+                }
+            }
+        }
+
         // add the first speech-and-meaning-view
-        val firstSpeechAndMeaningView = SpeechAndMeaningWhenAddingView(this)
+        val firstSpeechAndMeaningView = SpeechAndMeaningWhenAddingView(this, labelName = this.getString(R.string.str_part_of_speech_and_chinese_meaning), showDeleteButton = false)
+        firstSpeechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
         mLlySpeechesAndMeaningsContainer.addView(firstSpeechAndMeaningView)
 
         // event of adding new speech and meaning
         mBtnAddNewSpeechAndMeaning.setOnClickListener {
             val speechAndMeaningView = SpeechAndMeaningWhenAddingView(this, labelName = "")
+            speechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
             mLlySpeechesAndMeaningsContainer.addView(speechAndMeaningView)
         }
     }
