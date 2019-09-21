@@ -11,7 +11,7 @@ import java.io.File
 object WordsManager {
     const val NEW_WORD_FIELD: String = "new_word"
 
-    const val SERIALIZATION_WORDS_FILENAME: String = ".metallica_serialization_words"
+    private const val SERIALIZATION_WORDS_FILENAME: String = ".metallica_serialization_words"
 
     private val mWordList = ArrayList<WordItem>()
 
@@ -42,7 +42,7 @@ object WordsManager {
     }
 
     // get the word-list
-    fun getWordList(): ArrayList<WordItem> = mWordList
+    private fun getWordList(): ArrayList<WordItem> = mWordList
 
     // set adapter on recv
     fun setAdapterOnWordRecyclerView(context: Context, recv: RecyclerView) {

@@ -2,7 +2,9 @@ package com.rekkursion.metallica.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton

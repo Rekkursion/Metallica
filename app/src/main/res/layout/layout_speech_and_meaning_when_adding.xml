@@ -43,7 +43,7 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/imgbtn_delete_part_of_speech_and_chinese_meaning_when_adding"
-                android:src="@drawable/ic_delete_black_24dp"
+                android:src="@drawable/ic_delete_color_accent_24dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:layout_gravity="center"
                 android:layout_weight="1"

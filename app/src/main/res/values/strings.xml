@@ -8,8 +8,14 @@
     <string name="str_chinese_meaning">意義</string>
     <string name="str_part_of_speech_and_chinese_meaning">意義</string>
     <string name="str_add_new_part_of_speech_and_chinese_meaning">新增</string>
-    <string name="str_level_rate">難度</string>
-    <string name="str_remark">其他</string>
+    <string name="str_difficulty">難度</string>
+    <string name="str_difficulty_0star">零星</string>
+    <string name="str_difficulty_1star">一星</string>
+    <string name="str_difficulty_2stars">二星</string>
+    <string name="str_difficulty_3stars">三星</string>
+    <string name="str_difficulty_4stars">四星</string>
+    <string name="str_difficulty_5stars">五星</string>
+    <string name="str_remark">備註</string>
 
     <string name="str_adding_english_word_hint">Enter a word here.</string>
     <string name="str_adding_chinese_meaning_hint">What does it mean?</string>

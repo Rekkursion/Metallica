@@ -3,28 +3,27 @@ package com.rekkursion.metallica.model
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
-class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null): Serializable {
-    enum class PartOfSpeech(val abbr: String) {
+class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null, diff: Int? = null): Serializable {
+    enum class PartOfSpeech(val abbr: String, val chinese: String) {
         // region speeches
-        NOUN("n"),
-        VERB("v"),
-        ADVERB("adv"),
-        PHRASE("phr"),
-        ADJECTIVE("a"),
-        PREPOSITION("prep"),
-        CONJUNCTION("conj"),
-        PRONOUN("pron"),
-        ARTICLE("art"), // 冠詞
-        INTERJECTION("int"), // 感嘆詞
-        AUXILIARY_VERB("aux"), // 助動詞
-        TRANSITIVE_VERB("vt"),
-        INTRANSITIVE_VERB("vi"),
-        COUNTABLE_NOUN("c"),
-        UNCOUNTABLE_NOUN("u"),
-        PLURAL("pl"),
-        ABBREVIATION("abbr");
+        NOUN("n", "名詞"),
+        COUNTABLE_NOUN("c", "可數名詞"),
+        UNCOUNTABLE_NOUN("u", "不可數名詞"),
+        VERB("v", "動詞"),
+        TRANSITIVE_VERB("vt", "及物動詞"),
+        INTRANSITIVE_VERB("vi", "不及物動詞"),
+        ADVERB("adv", "副詞"),
+        PHRASE("phr", "片語"),
+        ADJECTIVE("a", "形容詞"),
+        PREPOSITION("prep", "介係詞"),
+        CONJUNCTION("conj", "連接詞"),
+        PRONOUN("pron", "代名詞"),
+        ARTICLE("art", "冠詞"), // 冠詞
+        INTERJECTION("int", "感嘆詞"), // 感嘆詞
+        AUXILIARY_VERB("aux", "助動詞"), // 助動詞
+        PLURAL("pl", "複數"),
+        ABBREVIATION("abbr", "縮寫");
         // endregion
     }
 
@@ -38,34 +37,7 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
     private var mChineseMeaningList: ArrayList<String>? = chiList
     private var mRemark: String? = rmk
     private var mLocalDateTime: LocalDateTime = LocalDateTime.now()
-
-    constructor(eng: String, speech: PartOfSpeech, chi: String, rmk: String, dateTimeStr: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))): this(eng, rmk = rmk) {
-        try {
-            mPartOfSpeechList = ArrayList()
-            mPartOfSpeechList?.add(speech)
-
-            mChineseMeaningList = ArrayList()
-            mChineseMeaningList?.add(chi)
-        } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
-
-        try {
-            mLocalDateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
-        } catch (e: DateTimeParseException) { e.printStackTrace() }
-    }
-
-    constructor(eng: String, speechStr: String, chi: String, rmk: String, dateTimeStr: String): this(eng, rmk = rmk) {
-        try {
-            mPartOfSpeechList = ArrayList()
-            mPartOfSpeechList?.add(PartOfSpeech.values().filter { it.abbr == speechStr }[0])
-
-            mChineseMeaningList = ArrayList()
-            mChineseMeaningList?.add(chi)
-        } catch (e: IndexOutOfBoundsException) { e.printStackTrace() }
-
-        try {
-            mLocalDateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
-        } catch (e: DateTimeParseException) { e.printStackTrace() }
-    }
+    private var mDifficulty: Int? = diff
 
     fun getEnglishWord(): String? = mEnglishWord
     fun setEnglishWord(eng: String) { mEnglishWord = eng }
@@ -82,4 +54,7 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
     fun getLocalDateTime(): LocalDateTime? = mLocalDateTime
     fun getLocalDateTimeStr(): String? = mLocalDateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
     fun setLocalDateTime(date: LocalDateTime) { mLocalDateTime = date }
+
+    fun getDifficulty(): Int? = mDifficulty
+    fun setDifficulty(diff: Int) { mDifficulty = diff }
 }

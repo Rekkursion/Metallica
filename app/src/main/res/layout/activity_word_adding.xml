@@ -59,12 +59,49 @@
             <Button
                     android:id="@+id/btn_add_new_speech_and_meaning"
                     android:text="@string/str_add_new_part_of_speech_and_chinese_meaning"
+                    android:textColor="@color/colorAccent"
                     android:layout_gravity="end"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:layout_marginEnd="@dimen/dim_general_margin"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+            <!-- difficulty -->
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_margin="@dimen/dim_general_margin"
+                    android:weightSum="15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/txtv_difficulty_when_adding"
+                        android:text="@string/str_difficulty"
+                        android:textSize="@dimen/dim_general_text_size"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/skb_difficulty_when_adding"
+                        android:max="5"
+                        android:progress="1"
+                        android:layout_weight="11"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+                <TextView
+                        android:id="@+id/txtv_show_selected_difficulty_when_adding"
+                        android:text="@string/str_difficulty_1star"
+                        android:textSize="@dimen/dim_general_text_size"
+                        android:textAlignment="textEnd"
+                        android:layout_marginEnd="@dimen/dim_general_margin"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <!-- remark -->
             <LinearLayout

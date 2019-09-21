@@ -4,12 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.*
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatSpinner
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.WordsManager
@@ -20,12 +17,31 @@ import com.rekkursion.metallica.view.SpeechAndMeaningWhenAddingView
 class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
     private lateinit var mEdtEnglishWord: EditText
     private lateinit var mEdtRemark: EditText
+    private lateinit var mSkbDifficulty: AppCompatSeekBar
+    private lateinit var mTxtvShowSelectedDifficulty: TextView
 
     private lateinit var mLlySpeechesAndMeaningsContainer: LinearLayout
     private lateinit var mBtnAddNewSpeechAndMeaning: Button
 
     private lateinit var mBtnCancel: Button
     private lateinit var mBtnSubmit: Button
+
+    private val mOnDifficultySeekBarChangeListener = object: SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, isFromUser: Boolean) {
+            mTxtvShowSelectedDifficulty.text =
+                    when (progress) {
+                        0 -> this@WordAddingActivity.getString(R.string.str_difficulty_0star)
+                        1 -> this@WordAddingActivity.getString(R.string.str_difficulty_1star)
+                        2 -> this@WordAddingActivity.getString(R.string.str_difficulty_2stars)
+                        3 -> this@WordAddingActivity.getString(R.string.str_difficulty_3stars)
+                        4 -> this@WordAddingActivity.getString(R.string.str_difficulty_4stars)
+                        else -> this@WordAddingActivity.getString(R.string.str_difficulty_5stars)
+                    }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,13 +76,15 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                 ++k
             }
 
-            // add the word by words-manager
+            // region add the word by words-manager
             WordsManager.addNewWord(this, WordItem(
                 mEdtEnglishWord.text.toString(),
                 speechList,
                 meaningList,
-                mEdtRemark.text.toString()
+                mEdtRemark.text.toString(),
+                mSkbDifficulty.progress
             ))
+            // endregion
         }
 
         // set result and finish
@@ -79,6 +97,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
     private fun initViews() {
         mEdtEnglishWord = findViewById(R.id.edt_english_word_when_adding)
         mEdtRemark = findViewById(R.id.edt_remark_when_adding)
+        mSkbDifficulty = findViewById(R.id.skb_difficulty_when_adding)
+        mTxtvShowSelectedDifficulty = findViewById(R.id.txtv_show_selected_difficulty_when_adding)
 
         mLlySpeechesAndMeaningsContainer = findViewById(R.id.lly_speeches_and_meanings_container)
         mBtnAddNewSpeechAndMeaning = findViewById(R.id.btn_add_new_speech_and_meaning)
@@ -117,7 +137,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
             speechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
             mLlySpeechesAndMeaningsContainer.addView(speechAndMeaningView)
         }
-    }
 
-    private fun getAllSpeechesList(): List<String> = WordItem.PartOfSpeech.values().map { it.abbr }
+        // seek-bar of difficulty changed
+        mSkbDifficulty.setOnSeekBarChangeListener(mOnDifficultySeekBarChangeListener)
+    }
 }
