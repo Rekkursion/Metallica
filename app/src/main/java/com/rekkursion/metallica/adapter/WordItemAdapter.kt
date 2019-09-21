@@ -1,10 +1,11 @@
 package com.rekkursion.metallica.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.model.WordItem
@@ -34,16 +35,16 @@ class WordItemAdapter(pWordItemList: ArrayList<WordItem>, pContext: Context): Re
         val item = mWordItemList?.get(position)
         val eng = item?.getEnglishWord()
         if (eng != null)
-            holder.setData(eng, item.getPartOfSpeechList(), item.getChineseMeaningList())
+            holder.setData(eng, item.getPartOfSpeechList(), item.getChineseMeaningList(), item.getDifficulty())
     }
 
     // inner class: view-holder
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var txtvEnglishWord: TextView = itemView.findViewById(R.id.txtv_english_word_at_word_item)
         private var txtvSpeechesAndMeanings: TextView = itemView.findViewById(R.id.txtv_part_of_speeches_and_chinese_meanings_at_word_item)
-        private var imgbtnMore: ImageButton = itemView.findViewById(R.id.imgbtn_more_at_word_item)
+        private var rtbDifficulty: RatingBar = itemView.findViewById(R.id.rtb_difficulty_at_word_item)
 
-        fun setData(eng: String, speechList: ArrayList<WordItem.PartOfSpeech>?, chiList: ArrayList<String>?) {
+        fun setData(eng: String, speechList: ArrayList<WordItem.PartOfSpeech>?, chiList: ArrayList<String>?, diff: Int?) {
             txtvEnglishWord.text = eng
 
             val sBuf = StringBuffer()
@@ -52,9 +53,7 @@ class WordItemAdapter(pWordItemList: ArrayList<WordItem>, pContext: Context): Re
             }
             txtvSpeechesAndMeanings.text = sBuf.toString()
 
-            imgbtnMore.setOnClickListener {
-                // TODO: click on more-button on item
-            }
+            rtbDifficulty.progress = diff ?: 0
         }
     }
 }

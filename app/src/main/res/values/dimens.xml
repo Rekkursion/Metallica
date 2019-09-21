@@ -7,6 +7,7 @@
     <dimen name="dim_button_bar_text_size">18sp</dimen>
 
     <dimen name="dim_word_item_english_word_text_size">24sp</dimen>
+    <dimen name="dim_word_item_part_of_speech_and_chinese_meaning_text_size">14sp</dimen>
     <dimen name="dim_word_item_spacing">6dp</dimen>
 
 </resources>

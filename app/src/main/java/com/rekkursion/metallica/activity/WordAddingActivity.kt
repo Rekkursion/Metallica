@@ -9,7 +9,7 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatSpinner
 import com.rekkursion.metallica.R
-import com.rekkursion.metallica.WordsManager
+import com.rekkursion.metallica.manager.WordsManager
 import com.rekkursion.metallica.model.WordItem
 import com.rekkursion.metallica.view.SpeechAndMeaningWhenAddingView
 

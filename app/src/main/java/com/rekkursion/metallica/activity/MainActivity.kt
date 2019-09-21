@@ -1,4 +1,4 @@
-package com.rekkursion.metallica
+package com.rekkursion.metallica.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,17 +7,18 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.rekkursion.metallica.activity.WordAddingActivity
-import com.rekkursion.metallica.manager.SerializationManager
+import com.rekkursion.metallica.R
+import com.rekkursion.metallica.listener.WordItemClickListener
+import com.rekkursion.metallica.manager.WordsManager
 
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
     companion object {
         private const val RC_TO_WORD_ADDING_ACTIVITY: Int = 4731
     }
@@ -51,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == RC_TO_WORD_ADDING_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
-                Snackbar.make(mFabAddNewWord, getString(R.string.str_add_new_word_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mFabAddNewWord, getString(R.string.str_add_new_word_successfully) + " " + data?.getStringExtra(
+                    WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
                 WordsManager.setAdapterOnWordRecyclerView(this, mRecvWordList)
             }
         }
@@ -66,8 +68,27 @@ class MainActivity : AppCompatActivity() {
         // click for adding new word
         mFabAddNewWord.setOnClickListener {
             val toWordAddingIntent = Intent(this, WordAddingActivity::class.java)
-            startActivityForResult(toWordAddingIntent, RC_TO_WORD_ADDING_ACTIVITY)
+            startActivityForResult(toWordAddingIntent,
+                RC_TO_WORD_ADDING_ACTIVITY
+            )
         }
+
+        // region set click and long-click listener on recv
+        mRecvWordList.addOnItemTouchListener(
+            WordItemClickListener(
+                mRecvWordList,
+                object: WordItemClickListener.OnWordItemClickListener {
+                    override fun onWordItemClick(view: View?, position: Int) {
+
+                    }
+
+                    override fun onWordItemLongClick(view: View?, position: Int) {
+
+                    }
+                }
+            )
+        )
+        // endregion
 
         // set layout-manager on recv
         val layoutManager = LinearLayoutManager(this)

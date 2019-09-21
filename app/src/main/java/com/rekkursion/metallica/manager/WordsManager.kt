@@ -1,10 +1,9 @@
-package com.rekkursion.metallica
+package com.rekkursion.metallica.manager
 
 import android.content.Context
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.adapter.WordItemAdapter
-import com.rekkursion.metallica.manager.SerializationManager
 import com.rekkursion.metallica.model.WordItem
 import java.io.File
 
@@ -20,7 +19,9 @@ object WordsManager {
         mWordList.add(item)
 
         // serial out the words
-        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
+        val serialOutFile = File(context.filesDir,
+            SERIALIZATION_WORDS_FILENAME
+        )
         if (!serialOutFile.exists())
             serialOutFile.createNewFile()
         val serialOutSuccessOrNot = SerializationManager.save(getWordList(), serialOutFile.path)
@@ -34,7 +35,9 @@ object WordsManager {
             mWordList.clear()
 
         // load from the serialized file
-        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
+        val serialOutFile = File(context.filesDir,
+            SERIALIZATION_WORDS_FILENAME
+        )
         if (!serialOutFile.exists())
             return
         val loaded = SerializationManager.load<ArrayList<WordItem> >(serialOutFile.path)
