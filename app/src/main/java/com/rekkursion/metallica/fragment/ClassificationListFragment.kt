@@ -11,21 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.manager.ClassificationManager
-import com.rekkursion.metallica.model.ClassificationItem
-import kotlin.contracts.contract
 
 
-class ClassificationListFragment(context: Context): Fragment() {
+class ClassificationListFragment: Fragment() {
     companion object {
         val TAG: String = ClassificationListFragment::class.java.simpleName
 
         // new instance of classification-list-fragment
-        fun newInstance(context: Context): ClassificationListFragment {
-            return ClassificationListFragment(context)
+        fun newInstance(): ClassificationListFragment {
+            return ClassificationListFragment()
         }
     }
 
-    private var mContext: Context = context
     private lateinit var mRecvClassificationList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,15 +42,15 @@ class ClassificationListFragment(context: Context): Fragment() {
 
     private fun initEvents() {
         // set layout-manager on recv
-        val layoutManager = LinearLayoutManager(mContext)
+        val layoutManager = LinearLayoutManager(this.context!!)
         layoutManager.orientation = RecyclerView.VERTICAL
         mRecvClassificationList.layoutManager = layoutManager
 
-        ClassificationManager.loadAllClassificationsBySerialization(mContext, true)
-        ClassificationManager.setAdapterOnClassificationRecyclerView(mContext, mRecvClassificationList)
+        ClassificationManager.loadAllClassificationsBySerialization(this.context!!, true)
+        ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
     }
 
     fun setAdapterOnClassificationRecyclerView() {
-        ClassificationManager.setAdapterOnClassificationRecyclerView(mContext, mRecvClassificationList)
+        ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
     }
 }

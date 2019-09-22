@@ -133,17 +133,46 @@
                             android:layout_height="wrap_content">
                     </LinearLayout>
 
-                    <!-- add new classification for this word -->
-                    <Button
-                            android:id="@+id/btn_add_new_classification_when_adding_word"
-                            android:text="@string/str_add_classification_when_adding_word"
-                            android:textColor="@color/colorAccent"
-                            android:layout_gravity="start"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                    <!-- select classifications for this word or add new classification -->
+                    <HorizontalScrollView
+                            android:scrollbars="none"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?android:attr/buttonBarStyle">
+
+                            <Button
+                                    android:id="@+id/btn_select_classifications_when_adding_word"
+                                    android:text="@string/str_insert_this_word_into_classifications_when_adding_word"
+                                    android:textColor="@color/colorAccent"
+                                    android:layout_gravity="start"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="?android:attr/buttonBarButtonStyle" />
+
+                            <Button
+                                    android:text="@string/str_or"
+                                    android:textColor="@android:color/darker_gray"
+                                    android:layout_gravity="start"
+                                    android:clickable="false"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="?android:attr/buttonBarButtonStyle" />
+
+                            <Button
+                                    android:id="@+id/btn_add_new_classification_when_adding_word"
+                                    android:text="@string/str_add_new_classification"
+                                    android:textColor="@color/colorAccent"
+                                    android:layout_gravity="start"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="?android:attr/buttonBarButtonStyle" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
                 </LinearLayout>
             </LinearLayout>
 

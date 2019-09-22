@@ -29,7 +29,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
     private lateinit var mLlySpeechesAndMeaningsContainer: LinearLayout
     private lateinit var mBtnAddNewSpeechAndMeaning: Button
 
-    private lateinit var mLlyClassificationsContainer: LinearLayout
+    private lateinit var mLlySelectedClassificationsContainer: LinearLayout
+    private lateinit var mBtnSelectClassifications: Button
     private lateinit var mBtnAddNewClassification: Button
     private var mSelectedClassificationTreeSet = TreeSet<ClassificationItem>()
 
@@ -132,7 +133,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
         mLlySpeechesAndMeaningsContainer = findViewById(R.id.lly_speeches_and_meanings_container_when_adding_word)
         mBtnAddNewSpeechAndMeaning = findViewById(R.id.btn_add_new_speech_and_meaning_when_adding_word)
 
-        mLlyClassificationsContainer = findViewById(R.id.lly_added_classifications_container_when_adding_word)
+        mLlySelectedClassificationsContainer = findViewById(R.id.lly_added_classifications_container_when_adding_word)
+        mBtnSelectClassifications = findViewById(R.id.btn_select_classifications_when_adding_word)
         mBtnAddNewClassification = findViewById(R.id.btn_add_new_classification_when_adding_word)
 
         mBtnCancel = findViewById(R.id.btn_cancel_when_adding_word)
@@ -173,8 +175,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
         // seek-bar of difficulty changed
         mSkbDifficulty.setOnSeekBarChangeListener(mOnDifficultySeekBarChangeListener)
 
-        // add new classification
-        mBtnAddNewClassification.setOnClickListener {
+        // select classifications
+        mBtnSelectClassifications.setOnClickListener {
             val groupNameArray = ClassificationManager.getClassificationGroupNames().filter {
                 it != getString(R.string.str_unclassified)
             }.toTypedArray()
@@ -182,44 +184,54 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                 mSelectedClassificationTreeSet.contains(ClassificationManager.getClassificationByGroupName(groupNameArray[idx]))
             }
 
+            // region build and show dialog
             val builder =
                 AlertDialog.Builder(this)
                     .setTitle(getString(R.string.str_select_classifications_when_adding_word))
+            if (groupNameArray.isEmpty())
+                builder
+                    .setMessage(getString(R.string.str_no_classification_yet))
+                    .setPositiveButton(getString(R.string.str_confirm), null)
+            else
+                builder
+                    .setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->
+                        groupNameIsCheckedArray[position] = isChecked
+                    }
                     .setPositiveButton(this.getString(R.string.str_submit)) { _, _ ->
-                    // remove all items and views
-                    mSelectedClassificationTreeSet.clear()
-                    mLlyClassificationsContainer.removeAllViews()
+                        // remove all items and views
+                        mSelectedClassificationTreeSet.clear()
+                        mLlySelectedClassificationsContainer.removeAllViews()
 
-                    // add views which are checked
-                    groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
-                        if (isChecked) {
-                            val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
+                        // add views which are checked
+                        groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
+                            if (isChecked) {
+                                val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
 
-                            classificationItem?.let {
-                                val groupName = it.getGroupName()
-                                val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupName)
+                                classificationItem?.let {
+                                    val groupName = it.getGroupName()
+                                    val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupName)
 
-                                classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
-                                    override fun onDeleteViewButtonClick(objectIndex: Int) {
-                                        mSelectedClassificationTreeSet.remove(it)
-                                        mLlyClassificationsContainer.removeView(classificationEntryView)
-                                    }
-                                })
+                                    classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
+                                        override fun onDeleteViewButtonClick(objectIndex: Int) {
+                                            mSelectedClassificationTreeSet.remove(it)
+                                            mLlySelectedClassificationsContainer.removeView(classificationEntryView)
+                                        }
+                                    })
 
-                                mSelectedClassificationTreeSet.add(it)
-                                mLlyClassificationsContainer.addView(classificationEntryView)
+                                    mSelectedClassificationTreeSet.add(it)
+                                    mLlySelectedClassificationsContainer.addView(classificationEntryView)
+                                }
                             }
                         }
                     }
-                }
                     .setNegativeButton(this.getString(R.string.str_cancel), null)
-            if (groupNameArray.isEmpty())
-                builder.setMessage(getString(R.string.str_no_classification_yet))
-            else
-                builder.setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->
-                    groupNameIsCheckedArray[position] = isChecked
-                }
             builder.create().show()
+            // endregion
+        }
+
+        // add new classification
+        mBtnAddNewClassification.setOnClickListener {
+            // TODO: add new classification when adding new word
         }
     }
 }

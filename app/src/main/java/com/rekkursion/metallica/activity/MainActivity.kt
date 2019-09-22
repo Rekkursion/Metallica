@@ -38,7 +38,7 @@ class MainActivity: AppCompatActivity() {
         initEvents()
 
         if (savedInstanceState == null) {
-            mClassificationListFragment = ClassificationListFragment.newInstance(this)
+            mClassificationListFragment = ClassificationListFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.lly_root_at_main, mClassificationListFragment!!)
