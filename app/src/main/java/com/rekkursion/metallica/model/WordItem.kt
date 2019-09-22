@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null, diff: Int? = null): Serializable {
+class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList: ArrayList<String>? = null, rmk: String? = null, diff: Int? = null, classificationList: ArrayList<ClassificationItem>? = null): Serializable {
     enum class PartOfSpeech(val abbr: String, val chinese: String) {
         // region speeches
         NOUN("n", "名詞"),
@@ -38,6 +38,7 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
     private var mRemark: String? = rmk
     private var mLocalDateTime: LocalDateTime = LocalDateTime.now()
     private var mDifficulty: Int? = diff
+    private var mClassificationList: ArrayList<ClassificationItem>? = classificationList
 
     fun getEnglishWord(): String? = mEnglishWord
     fun setEnglishWord(eng: String) { mEnglishWord = eng }
@@ -57,4 +58,7 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
 
     fun getDifficulty(): Int? = mDifficulty
     fun setDifficulty(diff: Int) { mDifficulty = diff }
+
+    fun getClassificationList(): ArrayList<ClassificationItem>? = mClassificationList
+    fun setClassificationList(classificationList: ArrayList<ClassificationItem>) { mClassificationList = classificationList }
 }

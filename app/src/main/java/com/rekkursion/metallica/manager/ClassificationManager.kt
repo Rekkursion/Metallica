@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.adapter.ClassificationItemAdapter
 import com.rekkursion.metallica.model.ClassificationItem
+import com.rekkursion.metallica.model.WordItem
 import java.io.File
 
 object ClassificationManager {
@@ -17,14 +18,16 @@ object ClassificationManager {
     // add the new classification
     fun addNewClassification(context: Context, item: ClassificationItem) {
         mClassificationList.add(item)
+        serialOut(context)
+    }
 
-        // serial out the words
-        val serialOutFile = File(context.filesDir, SERIALIZATION_CLASSIFICATIONS_FILENAME)
-        if (!serialOutFile.exists())
-            serialOutFile.createNewFile()
-        val serialOutSuccessOrNot = SerializationManager.save(mClassificationList, serialOutFile.path)
-        if (!serialOutSuccessOrNot)
-            Log.e("add-new-classification", "serial-out failed")
+    fun addWordIntoClassification(context: Context, classification: ClassificationItem, word: WordItem): Boolean {
+        mClassificationList.forEach {
+            if (it == classification)
+                it.addWord(word)
+        }
+
+        return serialOut(context)
     }
 
     // load all classifications by serialization
@@ -37,7 +40,6 @@ object ClassificationManager {
         if (!serialOutFile.exists())
             return
         val loaded = SerializationManager.load<ArrayList<ClassificationItem> >(serialOutFile.path)
-        Log.e("loaded size", loaded?.size.toString())
         mClassificationList.addAll(loaded ?: arrayListOf())
     }
 
@@ -50,4 +52,27 @@ object ClassificationManager {
 
     // get count of classification
     fun getClassificationCount(): Int = mClassificationList.size
+
+    // get classifications
+    fun getClassificationList(): ArrayList<ClassificationItem> = mClassificationList
+
+    // get the certain classification by its group name
+    fun getClassificationByGroupName(groupName: String): ClassificationItem? {
+        val filtered = mClassificationList.filter { it.getGroupName() == groupName }
+        return if (filtered.isEmpty()) null else filtered[0]
+    }
+
+    // get group names of classifications
+    fun getClassificationGroupNames(): List<String> = mClassificationList.map { it.getGroupName() }
+
+    private fun serialOut(context: Context): Boolean {
+        // serial out the words
+        val serialOutFile = File(context.filesDir, SERIALIZATION_CLASSIFICATIONS_FILENAME)
+        if (!serialOutFile.exists())
+            serialOutFile.createNewFile()
+        val serialOutSuccessOrNot = SerializationManager.save(mClassificationList, serialOutFile.path)
+        if (!serialOutSuccessOrNot)
+            Log.e("add-new-classification", "serial-out failed")
+        return serialOutSuccessOrNot
+    }
 }

@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content" />
 
                 <EditText
-                        android:id="@+id/edt_english_word_when_adding"
+                        android:id="@+id/edt_english_word_when_adding_word"
                         android:hint="@string/str_adding_english_word_hint"
                         android:textSize="@dimen/dim_general_text_size"
                         android:inputType="text"
@@ -57,7 +57,7 @@
 
             <!-- button of adding new meaning -->
             <Button
-                    android:id="@+id/btn_add_new_speech_and_meaning"
+                    android:id="@+id/btn_add_new_speech_and_meaning_when_adding_word"
                     android:text="@string/str_add_new_part_of_speech_and_chinese_meaning"
                     android:textColor="@color/colorAccent"
                     android:layout_gravity="end"
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content" />
 
                 <androidx.appcompat.widget.AppCompatSeekBar
-                        android:id="@+id/skb_difficulty_when_adding"
+                        android:id="@+id/skb_difficulty_when_adding_word"
                         android:max="5"
                         android:progress="1"
                         android:layout_weight="11"
@@ -93,7 +93,7 @@
                         android:layout_height="wrap_content" />
 
                 <TextView
-                        android:id="@+id/txtv_show_selected_difficulty_when_adding"
+                        android:id="@+id/txtv_show_selected_difficulty_when_adding_word"
                         android:text="@string/str_difficulty_1star"
                         android:textSize="@dimen/dim_general_text_size"
                         android:textAlignment="textEnd"
@@ -115,7 +115,6 @@
                         android:id="@+id/txtv_classification_when_adding_word"
                         android:text="@string/str_classification"
                         android:textSize="@dimen/dim_general_text_size"
-                        android:layout_marginTop="14dp"
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />
@@ -165,7 +164,7 @@
                         android:layout_height="wrap_content" />
 
                 <EditText
-                        android:id="@+id/edt_remark_when_adding"
+                        android:id="@+id/edt_remark_when_adding_word"
                         android:hint="@string/str_adding_remark_hint"
                         android:textSize="@dimen/dim_general_text_size"
                         android:inputType="textMultiLine"
@@ -184,7 +183,7 @@
                     style="?android:attr/buttonBarStyle">
 
                 <Button
-                        android:id="@+id/btn_cancel_when_adding"
+                        android:id="@+id/btn_cancel_when_adding_word"
                         android:text="@string/str_cancel"
                         android:textSize="@dimen/dim_button_bar_text_size"
                         android:layout_weight="1"
@@ -193,7 +192,7 @@
                         style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
-                        android:id="@+id/btn_submit_when_adding"
+                        android:id="@+id/btn_submit_when_adding_word"
                         android:text="@string/str_submit"
                         android:textSize="@dimen/dim_button_bar_text_size"
                         android:layout_weight="1"

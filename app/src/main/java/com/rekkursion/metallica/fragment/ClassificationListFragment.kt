@@ -49,16 +49,6 @@ class ClassificationListFragment(context: Context): Fragment() {
         layoutManager.orientation = RecyclerView.VERTICAL
         mRecvClassificationList.layoutManager = layoutManager
 
-        // initially load all classifications through the serialization and set adapter on recv
-//        context?.let {
-//            // if there's no classification yet, add one called "unclassified"
-//            if (ClassificationManager.getClassificationCount() == 0)
-//                ClassificationManager.addNewClassification(it, ClassificationItem(it.getString(R.string.str_unclassified)))
-//
-//            ClassificationManager.loadAllClassificationsBySerialization(it, true)
-//            ClassificationManager.setAdapterOnClassificationRecyclerView(it, mRecvClassificationList)
-//        }
-
         ClassificationManager.loadAllClassificationsBySerialization(mContext, true)
         ClassificationManager.setAdapterOnClassificationRecyclerView(mContext, mRecvClassificationList)
     }

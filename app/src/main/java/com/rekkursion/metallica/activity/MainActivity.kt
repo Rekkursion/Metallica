@@ -65,6 +65,7 @@ class MainActivity: AppCompatActivity() {
             RC_TO_WORD_ADDING_ACTIVITY -> {
                 if (resultCode == Activity.RESULT_OK) {
                     Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
+                    mClassificationListFragment?.setAdapterOnClassificationRecyclerView()
                 }
             }
 

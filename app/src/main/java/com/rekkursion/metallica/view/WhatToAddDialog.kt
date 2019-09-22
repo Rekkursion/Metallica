@@ -19,7 +19,7 @@ class WhatToAddDialog(context: Context): Dialog(context) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_what_to_add_dialog)
 
-        setCanceledOnTouchOutside(false)
+        setCanceledOnTouchOutside(true)
 
         initViews()
         initEvents()

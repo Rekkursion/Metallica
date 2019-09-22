@@ -1,6 +1,7 @@
 package com.rekkursion.metallica.activity
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,9 +10,14 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatSpinner
 import com.rekkursion.metallica.R
+import com.rekkursion.metallica.manager.ClassificationManager
 import com.rekkursion.metallica.manager.WordsManager
+import com.rekkursion.metallica.model.ClassificationItem
 import com.rekkursion.metallica.model.WordItem
+import com.rekkursion.metallica.view.ClassificationEntryWhenAddingWordView
 import com.rekkursion.metallica.view.SpeechAndMeaningWhenAddingView
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
@@ -22,6 +28,10 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mLlySpeechesAndMeaningsContainer: LinearLayout
     private lateinit var mBtnAddNewSpeechAndMeaning: Button
+
+    private lateinit var mLlyClassificationsContainer: LinearLayout
+    private lateinit var mBtnAddNewClassification: Button
+    private var mSelectedClassificationTreeSet = TreeSet<ClassificationItem>()
 
     private lateinit var mBtnCancel: Button
     private lateinit var mBtnSubmit: Button
@@ -53,11 +63,11 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         // illegal buttons clicked, return directly
-        if (view?.id != R.id.btn_cancel_when_adding && view?.id != R.id.btn_submit_when_adding)
+        if (view?.id != R.id.btn_cancel_when_adding_word && view?.id != R.id.btn_submit_when_adding_word)
             return
 
         // if submitting
-        if (view.id == R.id.btn_submit_when_adding) {
+        if (view.id == R.id.btn_submit_when_adding_word) {
             // build the speeches and meanings lists
             val speechList = ArrayList<WordItem.PartOfSpeech>()
             val meaningList = ArrayList<String>()
@@ -76,35 +86,57 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                 ++k
             }
 
-            // region add the word by words-manager
-            WordsManager.addNewWord(this, WordItem(
+            // region new word-item
+            // 沒有加入任何分類，則加入「未分類」分類
+            if (mSelectedClassificationTreeSet.isEmpty()) {
+                // 還沒有「未分類」分類，新增「未分類」分類
+                if (ClassificationManager.getClassificationGroupNames().none { it == getString(R.string.str_unclassified) })
+                    ClassificationManager.addNewClassification(this, ClassificationItem(getString(R.string.str_unclassified), arrayListOf()))
+                // 將單字加入「未分類」分類
+                val unclassifiedClassification = ClassificationManager.getClassificationByGroupName(getString(R.string.str_unclassified))
+                unclassifiedClassification?.let { mSelectedClassificationTreeSet.add(it) }
+            }
+
+            val newWordItem = WordItem(
                 mEdtEnglishWord.text.toString(),
                 speechList,
                 meaningList,
                 mEdtRemark.text.toString(),
-                mSkbDifficulty.progress
-            ))
+                mSkbDifficulty.progress,
+                mSelectedClassificationTreeSet.toCollection(ArrayList())
+            )
             // endregion
+
+            // add the word by words-manager
+            WordsManager.addNewWord(this, newWordItem)
+
+            // add the word into the selected classifications
+            mSelectedClassificationTreeSet.forEach {
+                ClassificationManager.addWordIntoClassification(this, it, newWordItem)
+            }
         }
 
         // set result and finish
         val dataIntent = Intent()
         dataIntent.putExtra(WordsManager.NEW_WORD_FIELD, mEdtEnglishWord.text.toString())
-        setResult(if (view.id == R.id.btn_cancel_when_adding) Activity.RESULT_CANCELED else Activity.RESULT_OK, dataIntent)
+        setResult(if (view.id == R.id.btn_cancel_when_adding_word) Activity.RESULT_CANCELED else Activity.RESULT_OK, dataIntent)
         finish()
     }
 
     private fun initViews() {
-        mEdtEnglishWord = findViewById(R.id.edt_english_word_when_adding)
-        mEdtRemark = findViewById(R.id.edt_remark_when_adding)
-        mSkbDifficulty = findViewById(R.id.skb_difficulty_when_adding)
-        mTxtvShowSelectedDifficulty = findViewById(R.id.txtv_show_selected_difficulty_when_adding)
+        mEdtEnglishWord = findViewById(R.id.edt_english_word_when_adding_word)
+        mEdtRemark = findViewById(R.id.edt_remark_when_adding_word)
+        mSkbDifficulty = findViewById(R.id.skb_difficulty_when_adding_word)
+        mTxtvShowSelectedDifficulty = findViewById(R.id.txtv_show_selected_difficulty_when_adding_word)
 
         mLlySpeechesAndMeaningsContainer = findViewById(R.id.lly_speeches_and_meanings_container_when_adding_word)
-        mBtnAddNewSpeechAndMeaning = findViewById(R.id.btn_add_new_speech_and_meaning)
+        mBtnAddNewSpeechAndMeaning = findViewById(R.id.btn_add_new_speech_and_meaning_when_adding_word)
 
-        mBtnCancel = findViewById(R.id.btn_cancel_when_adding)
-        mBtnSubmit = findViewById(R.id.btn_submit_when_adding)
+        mLlyClassificationsContainer = findViewById(R.id.lly_added_classifications_container_when_adding_word)
+        mBtnAddNewClassification = findViewById(R.id.btn_add_new_classification_when_adding_word)
+
+        mBtnCancel = findViewById(R.id.btn_cancel_when_adding_word)
+        mBtnSubmit = findViewById(R.id.btn_submit_when_adding_word)
     }
 
     private fun initEvents() {
@@ -140,5 +172,54 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
         // seek-bar of difficulty changed
         mSkbDifficulty.setOnSeekBarChangeListener(mOnDifficultySeekBarChangeListener)
+
+        // add new classification
+        mBtnAddNewClassification.setOnClickListener {
+            val groupNameArray = ClassificationManager.getClassificationGroupNames().filter {
+                it != getString(R.string.str_unclassified)
+            }.toTypedArray()
+            val groupNameIsCheckedArray = BooleanArray(groupNameArray.size) { idx ->
+                mSelectedClassificationTreeSet.contains(ClassificationManager.getClassificationByGroupName(groupNameArray[idx]))
+            }
+
+            val builder =
+                AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.str_select_classifications_when_adding_word))
+                    .setPositiveButton(this.getString(R.string.str_submit)) { _, _ ->
+                    // remove all items and views
+                    mSelectedClassificationTreeSet.clear()
+                    mLlyClassificationsContainer.removeAllViews()
+
+                    // add views which are checked
+                    groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
+                        if (isChecked) {
+                            val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
+
+                            classificationItem?.let {
+                                val groupName = it.getGroupName()
+                                val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupName)
+
+                                classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
+                                    override fun onDeleteViewButtonClick(objectIndex: Int) {
+                                        mSelectedClassificationTreeSet.remove(it)
+                                        mLlyClassificationsContainer.removeView(classificationEntryView)
+                                    }
+                                })
+
+                                mSelectedClassificationTreeSet.add(it)
+                                mLlyClassificationsContainer.addView(classificationEntryView)
+                            }
+                        }
+                    }
+                }
+                    .setNegativeButton(this.getString(R.string.str_cancel), null)
+            if (groupNameArray.isEmpty())
+                builder.setMessage(getString(R.string.str_no_classification_yet))
+            else
+                builder.setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->
+                    groupNameIsCheckedArray[position] = isChecked
+                }
+            builder.create().show()
+        }
     }
 }
