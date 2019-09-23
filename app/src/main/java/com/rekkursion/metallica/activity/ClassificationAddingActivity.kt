@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.manager.ClassificationManager
 import com.rekkursion.metallica.model.ClassificationItem
@@ -32,6 +33,19 @@ class ClassificationAddingActivity: AppCompatActivity(), View.OnClickListener {
 
         // if submitting
         if (view.id == R.id.btn_submit_when_adding_classification) {
+            val newClassificationGroupName = mEdtGroupName.text.toString()
+
+            // 不可以取叫「未分類」
+            if (newClassificationGroupName == getString(R.string.str_unclassified)) {
+                Toast.makeText(this, "不可以將分類名取叫「${getString(R.string.str_unclassified)}」。", Toast.LENGTH_SHORT).show()
+                return
+            }
+            // 該分類名已存在
+            if (ClassificationManager.getClassificationGroupNames().contains(newClassificationGroupName)) {
+                Toast.makeText(this, "分類名「$newClassificationGroupName」已存在。", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             // region add the classification by classification-manager
             ClassificationManager.addNewClassification(this, ClassificationItem(
                 mEdtGroupName.text.toString()

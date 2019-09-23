@@ -6,8 +6,8 @@ import android.view.View
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class WordItemClickListener(recyclerView: RecyclerView, listener: OnWordItemClickListener): RecyclerView.SimpleOnItemTouchListener() {
-    private var clickListener: OnWordItemClickListener? = listener
+class RecyclerViewItemClickListener(recyclerView: RecyclerView, listener: OnItemClickListener): RecyclerView.SimpleOnItemTouchListener() {
+    private var clickListener: OnItemClickListener? = listener
     private var gestureDetector: GestureDetectorCompat? = null
 
     init {
@@ -16,14 +16,14 @@ class WordItemClickListener(recyclerView: RecyclerView, listener: OnWordItemClic
                 override fun onSingleTapUp(e: MotionEvent): Boolean {
                     val childView = recyclerView.findChildViewUnder(e.x, e.y)
                     if (childView != null && clickListener != null)
-                        clickListener?.onWordItemClick(childView, recyclerView.getChildAdapterPosition(childView))
+                        clickListener?.onItemClick(childView, recyclerView.getChildAdapterPosition(childView))
                     return true
                 }
 
                 override fun onLongPress(e: MotionEvent) {
                     val childView = recyclerView.findChildViewUnder(e.x, e.y)
                     if (childView != null && clickListener != null)
-                        clickListener?.onWordItemLongClick(childView, recyclerView.getChildAdapterPosition(childView))
+                        clickListener?.onItemLongClick(childView, recyclerView.getChildAdapterPosition(childView))
                 }
             })
     }
@@ -34,8 +34,8 @@ class WordItemClickListener(recyclerView: RecyclerView, listener: OnWordItemClic
     }
 
     // interface
-    interface OnWordItemClickListener {
-        fun onWordItemClick(view: View?, position: Int)
-        fun onWordItemLongClick(view: View?, position: Int)
+    interface OnItemClickListener {
+        fun onItemClick(view: View?, position: Int)
+        fun onItemLongClick(view: View?, position: Int)
     }
 }

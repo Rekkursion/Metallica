@@ -15,7 +15,7 @@
     <string name="str_difficulty_4stars">四星</string>
     <string name="str_difficulty_5stars">五星</string>
     <string name="str_classification" />
-    <string name="str_insert_this_word_into_classifications_when_adding_word">將這個單字加入分類&#8230;</string>
+    <string name="str_insert_this_word_into_classifications_when_adding_word">將這個單字加入分類</string>
     <string name="str_remark">備註</string>
 
     <string name="str_adding_english_word_hint">Enter a word here.</string>

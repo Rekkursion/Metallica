@@ -180,9 +180,10 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
             val groupNameArray = ClassificationManager.getClassificationGroupNames().filter {
                 it != getString(R.string.str_unclassified)
             }.toTypedArray()
-            val groupNameIsCheckedArray = BooleanArray(groupNameArray.size) { idx ->
-                mSelectedClassificationTreeSet.contains(ClassificationManager.getClassificationByGroupName(groupNameArray[idx]))
-            }
+//            val groupNameIsCheckedArray = BooleanArray(groupNameArray.size) { idx ->
+//                mSelectedClassificationTreeSet.contains(ClassificationManager.getClassificationByGroupName(groupNameArray[idx]))
+//            }
+            var checkedGroupNameIndex = 0
 
             // region build and show dialog
             val builder =
@@ -194,35 +195,54 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                     .setPositiveButton(getString(R.string.str_confirm), null)
             else
                 builder
-                    .setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->
-                        groupNameIsCheckedArray[position] = isChecked
+                    .setSingleChoiceItems(groupNameArray, 0) { _, position ->
+                        checkedGroupNameIndex = position
                     }
+//                    .setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->
+//                        groupNameIsCheckedArray[position] = isChecked
+//                    }
                     .setPositiveButton(this.getString(R.string.str_submit)) { _, _ ->
                         // remove all items and views
                         mSelectedClassificationTreeSet.clear()
                         mLlySelectedClassificationsContainer.removeAllViews()
 
-                        // add views which are checked
-                        groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
-                            if (isChecked) {
-                                val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
+                        val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[checkedGroupNameIndex])
+                        classificationItem?.let {
+                            val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupNameArray[checkedGroupNameIndex])
 
-                                classificationItem?.let {
-                                    val groupName = it.getGroupName()
-                                    val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupName)
-
-                                    classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
-                                        override fun onDeleteViewButtonClick(objectIndex: Int) {
-                                            mSelectedClassificationTreeSet.remove(it)
-                                            mLlySelectedClassificationsContainer.removeView(classificationEntryView)
-                                        }
-                                    })
-
-                                    mSelectedClassificationTreeSet.add(it)
-                                    mLlySelectedClassificationsContainer.addView(classificationEntryView)
+                            classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
+                                override fun onDeleteViewButtonClick(objectIndex: Int) {
+                                    mSelectedClassificationTreeSet.remove(it)
+                                    mLlySelectedClassificationsContainer.removeView(classificationEntryView)
                                 }
-                            }
+                            })
+
+                            mSelectedClassificationTreeSet.add(it)
+                            mLlySelectedClassificationsContainer.addView(classificationEntryView)
                         }
+
+                        // region add views which are checked
+//                        groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
+//                            if (isChecked) {
+//                                val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
+//
+//                                classificationItem?.let {
+//                                    val groupName = it.getGroupName()
+//                                    val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupName)
+//
+//                                    classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
+//                                        override fun onDeleteViewButtonClick(objectIndex: Int) {
+//                                            mSelectedClassificationTreeSet.remove(it)
+//                                            mLlySelectedClassificationsContainer.removeView(classificationEntryView)
+//                                        }
+//                                    })
+//
+//                                    mSelectedClassificationTreeSet.add(it)
+//                                    mLlySelectedClassificationsContainer.addView(classificationEntryView)
+//                                }
+//                            }
+//                        }
+                        // endregion
                     }
                     .setNegativeButton(this.getString(R.string.str_cancel), null)
             builder.create().show()

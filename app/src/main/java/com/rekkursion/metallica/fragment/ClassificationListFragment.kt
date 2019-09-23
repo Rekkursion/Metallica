@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.R
+import com.rekkursion.metallica.listener.RecyclerViewItemClickListener
 import com.rekkursion.metallica.manager.ClassificationManager
 
 
@@ -41,13 +42,33 @@ class ClassificationListFragment: Fragment() {
     }
 
     private fun initEvents() {
-        // set layout-manager on recv
+        // region set layout-manager on recv
         val layoutManager = LinearLayoutManager(this.context!!)
         layoutManager.orientation = RecyclerView.VERTICAL
         mRecvClassificationList.layoutManager = layoutManager
+        // endregion
 
+        // region set click and long-click listener on recv
+        mRecvClassificationList.addOnItemTouchListener(
+            RecyclerViewItemClickListener(
+                mRecvClassificationList,
+                object: RecyclerViewItemClickListener.OnItemClickListener {
+                    override fun onItemClick(view: View?, position: Int) {
+
+                    }
+
+                    override fun onItemLongClick(view: View?, position: Int) {
+                        
+                    }
+                }
+            )
+        )
+        // endregion
+
+        // region load all existed classifications by serialization and set adapter on recv
         ClassificationManager.loadAllClassificationsBySerialization(this.context!!, true)
         ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
+        // endregion
     }
 
     fun setAdapterOnClassificationRecyclerView() {
