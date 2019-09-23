@@ -14,7 +14,7 @@
     <string name="str_difficulty_3stars">三星</string>
     <string name="str_difficulty_4stars">四星</string>
     <string name="str_difficulty_5stars">五星</string>
-    <string name="str_classification" />
+    <string name="str_classification"/>
     <string name="str_insert_this_word_into_classifications_when_adding_word">將這個單字加入分類</string>
     <string name="str_remark">備註</string>
 
@@ -37,4 +37,7 @@
     <string name="str_select_classifications_when_adding_word">選擇分類</string>
     <string name="str_no_classification_yet">還沒有任何分類喔</string>
     <string name="str_or">或</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

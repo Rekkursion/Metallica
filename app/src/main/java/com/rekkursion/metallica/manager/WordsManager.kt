@@ -3,6 +3,7 @@ package com.rekkursion.metallica.manager
 import android.content.Context
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import com.rekkursion.metallica.R
 import com.rekkursion.metallica.adapter.WordItemAdapter
 import com.rekkursion.metallica.model.WordItem
 import java.io.File
@@ -28,7 +29,7 @@ object WordsManager {
     }
 
     // load all words by serialization
-    fun loadAllWordsBySerialization(context: Context, clearFirst: Boolean) {
+    fun loadAllWordsBySerialization(context: Context, clearFirst: Boolean, groupName: String? = null) {
         if (clearFirst)
             mWordList.clear()
 
@@ -37,7 +38,23 @@ object WordsManager {
         if (!serialOutFile.exists())
             return
         val loaded = SerializationManager.load<ArrayList<WordItem> >(serialOutFile.path)
-        mWordList.addAll(loaded ?: arrayListOf())
+        loaded?.let { safeLoaded ->
+            if (groupName == null)
+                mWordList.addAll(safeLoaded)
+            else {
+                safeLoaded.forEach { wordItem ->
+                    if (wordItem.getClassificationList() == null || wordItem.getClassificationList()!!.isEmpty()) {
+                        if (groupName == context.getString(R.string.str_unclassified))
+                            mWordList.add(wordItem)
+                    }
+                    else {
+                        val classification = wordItem.getClassificationList()!![0]
+                        if (groupName == classification.getGroupName())
+                            mWordList.add(wordItem)
+                    }
+                }
+            }
+        }
     }
 
     // get the word-list

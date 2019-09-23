@@ -12,22 +12,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.listener.RecyclerViewItemClickListener
 import com.rekkursion.metallica.manager.ClassificationManager
+import com.rekkursion.metallica.manager.WordsManager
 
+private var mGroupName: String? = null
 
-class ClassificationListFragment: Fragment() {
+class WordListFragment: Fragment() {
     companion object {
-        val TAG: String = ClassificationListFragment::class.java.simpleName
+        val TAG: String = WordListFragment::class.java.simpleName
 
-        // new instance of classification-list-fragment
-        fun newInstance(): ClassificationListFragment {
-            return ClassificationListFragment()
+        // new instance of word-list-fragment
+        fun newInstance(groupName: String): WordListFragment {
+            mGroupName = groupName
+            return WordListFragment()
         }
     }
 
-    private lateinit var mRecvClassificationList: RecyclerView
+    private lateinit var mRecvWordList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_classification_list, container, false)
+        return inflater.inflate(R.layout.fragment_word_list, container, false)
     }
 
     override fun onViewCreated(rootView: View, savedInstanceState: Bundle?) {
@@ -38,45 +41,40 @@ class ClassificationListFragment: Fragment() {
     }
 
     private fun initViews(rootView: View) {
-        mRecvClassificationList = rootView.findViewById(R.id.recv_classification_list)
+        mRecvWordList = rootView.findViewById(R.id.recv_word_list)
     }
 
     private fun initEvents() {
         // region set layout-manager on recv
         val layoutManager = LinearLayoutManager(this.context!!)
         layoutManager.orientation = RecyclerView.VERTICAL
-        mRecvClassificationList.layoutManager = layoutManager
+        mRecvWordList.layoutManager = layoutManager
         // endregion
 
         // region set click and long-click listener on recv
-        mRecvClassificationList.addOnItemTouchListener(
+        mRecvWordList.addOnItemTouchListener(
             RecyclerViewItemClickListener(
-                mRecvClassificationList,
+                mRecvWordList,
                 object: RecyclerViewItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
-                        val wordListFragment = WordListFragment.newInstance(ClassificationManager.getClassificationGroupNames()[position])
-                        fragmentManager
-                            ?.beginTransaction()
-                            ?.detach(this@ClassificationListFragment)
-                            ?.add(R.id.lly_root_at_main, wordListFragment)
-                            ?.commit()
+
                     }
 
                     override fun onItemLongClick(view: View?, position: Int) {
-                        // TODO: classification item long-click
+
                     }
                 }
             )
         )
         // endregion
 
-        // region load all existed classifications by serialization and set adapter on recv
-        ClassificationManager.loadAllClassificationsBySerialization(this.context!!, true)
-        ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
+        // region load all existed words in this classification by serialization and set adapter on recv
+        WordsManager.loadAllWordsBySerialization(this.context!!, true, mGroupName)
+        WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList)
         // endregion
     }
 
-    fun setAdapterOnClassificationRecyclerView() {
-        ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
+    fun setAdapterOnWordRecyclerView() {
+        WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList)
     }
 }

@@ -3,6 +3,7 @@ package com.rekkursion.metallica.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.fragment.ClassificationListFragment
+import com.rekkursion.metallica.fragment.WordListFragment
 import com.rekkursion.metallica.manager.ClassificationManager
 import com.rekkursion.metallica.manager.WordsManager
 import com.rekkursion.metallica.view.WhatToAddDialog
@@ -74,6 +76,19 @@ class MainActivity: AppCompatActivity() {
                     Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(ClassificationManager.NEW_CLASSIFICATION_FIELD), Snackbar.LENGTH_SHORT).show()
                     mClassificationListFragment?.setAdapterOnClassificationRecyclerView()
                 }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.fragments.isNotEmpty()) {
+            if (supportFragmentManager.fragments[0]::class.java.simpleName == WordListFragment::class.java.simpleName) {
+                mClassificationListFragment = ClassificationListFragment.newInstance()
+                supportFragmentManager
+                    .beginTransaction()
+                    .detach(supportFragmentManager.fragments[0])
+                    .add(R.id.lly_root_at_main, mClassificationListFragment!!)
+                    .commit()
             }
         }
     }
