@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.listener.RecyclerViewItemClickListener
 import com.rekkursion.metallica.manager.ClassificationManager
+import com.rekkursion.metallica.manager.OperationManager
 import com.rekkursion.metallica.manager.WordsManager
 
 private var mGroupName: String? = null
@@ -62,7 +63,12 @@ class WordListFragment: Fragment() {
                     }
 
                     override fun onItemLongClick(view: View?, position: Int) {
-
+                        OperationManager.buildItemOperatingDialog(
+                            this@WordListFragment,
+                            mRecvWordList,
+                            OperationManager.OperatedObject.WORD,
+                            ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList()?.get(position)?.getEnglishWord()!!
+                        )
                     }
                 }
             )

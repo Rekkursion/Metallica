@@ -3,6 +3,7 @@ package com.rekkursion.metallica.manager
 import android.content.Context
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import com.rekkursion.metallica.R
 import com.rekkursion.metallica.adapter.ClassificationItemAdapter
 import com.rekkursion.metallica.model.ClassificationItem
 import com.rekkursion.metallica.model.WordItem
@@ -28,6 +29,18 @@ object ClassificationManager {
         }
 
         return serialOut(context)
+    }
+
+    // change the group name of the classification
+    fun changeClassificationGroupName(context: Context, origGroupName: String, newGroupName: String) {
+        if (origGroupName == newGroupName || origGroupName == context.getString(R.string.str_unclassified))
+            return
+
+        val idx = mClassificationList.indexOf(getClassificationByGroupName(origGroupName))
+        if (idx >= 0) {
+            mClassificationList[idx].setGroupName(newGroupName)
+            serialOut(context)
+        }
     }
 
     // load all classifications by serialization

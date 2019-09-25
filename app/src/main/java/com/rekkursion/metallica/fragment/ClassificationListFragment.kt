@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.listener.RecyclerViewItemClickListener
 import com.rekkursion.metallica.manager.ClassificationManager
+import com.rekkursion.metallica.manager.OperationManager
 
 
 class ClassificationListFragment: Fragment() {
@@ -55,16 +56,16 @@ class ClassificationListFragment: Fragment() {
                 mRecvClassificationList,
                 object: RecyclerViewItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
-                        val wordListFragment = WordListFragment.newInstance(ClassificationManager.getClassificationGroupNames()[position])
-                        fragmentManager
-                            ?.beginTransaction()
-                            ?.detach(this@ClassificationListFragment)
-                            ?.add(R.id.lly_root_at_main, wordListFragment)
-                            ?.commit()
+                        OperationManager.enterClassification(this@ClassificationListFragment, ClassificationManager.getClassificationGroupNames()[position])
                     }
 
                     override fun onItemLongClick(view: View?, position: Int) {
-                        // TODO: classification item long-click
+                        OperationManager.buildItemOperatingDialog(
+                            this@ClassificationListFragment,
+                            mRecvClassificationList,
+                            OperationManager.OperatedObject.CLASSIFICATION,
+                            ClassificationManager.getClassificationGroupNames()[position]
+                        )
                     }
                 }
             )

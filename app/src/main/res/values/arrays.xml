@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="strarr_part_of_speech">
-        <item>星期一</item>
-        <item>星期二</item>
-        <item>星期三</item>
-        <item>星期四</item>
-        <item>星期五</item>
-        <item>星期六</item>
-        <item>星期天</item>
+    <string-array name="strarr_classification_operations">
+        <item>進入分類</item>
+        <item>分類信息</item>
+        <item>重新命名</item>
+        <item>編輯內容</item>
+        <item>刪除分類</item>
+    </string-array>
+
+    <string-array name="strarr_word_operations">
+        <item>單字信息</item>
+        <item>編輯單字</item>
+        <item>刪除單字</item>
     </string-array>
 </resources>
