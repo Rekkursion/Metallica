@@ -11,58 +11,9 @@ import java.io.File
 object WordsManager {
     const val NEW_WORD_FIELD: String = "new_word"
 
-    private const val SERIALIZATION_WORDS_FILENAME: String = ".metallica_serialization_words"
-
-    private val mWordList = ArrayList<WordItem>()
-
-    // add the new word into word-list
-    fun addNewWord(context: Context, item: WordItem) {
-        mWordList.add(item)
-
-        // serial out the words
-        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
-        if (!serialOutFile.exists())
-            serialOutFile.createNewFile()
-        val serialOutSuccessOrNot = SerializationManager.save(getWordList(), serialOutFile.path)
-        if (!serialOutSuccessOrNot)
-            Log.e("add-new-word", "serial-out failed")
-    }
-
-    // load all words by serialization
-    fun loadAllWordsBySerialization(context: Context, clearFirst: Boolean, groupName: String? = null) {
-        if (clearFirst)
-            mWordList.clear()
-
-        // load from the serialized file
-        val serialOutFile = File(context.filesDir, SERIALIZATION_WORDS_FILENAME)
-        if (!serialOutFile.exists())
-            return
-        val loaded = SerializationManager.load<ArrayList<WordItem> >(serialOutFile.path)
-        loaded?.let { safeLoaded ->
-            if (groupName == null)
-                mWordList.addAll(safeLoaded)
-            else {
-                safeLoaded.forEach { wordItem ->
-                    if (wordItem.getClassificationList() == null || wordItem.getClassificationList()!!.isEmpty()) {
-                        if (groupName == context.getString(R.string.str_unclassified))
-                            mWordList.add(wordItem)
-                    }
-                    else {
-                        val classification = wordItem.getClassificationList()!![0]
-                        if (groupName == classification.getGroupName())
-                            mWordList.add(wordItem)
-                    }
-                }
-            }
-        }
-    }
-
-    // get the word-list
-    private fun getWordList(): ArrayList<WordItem> = mWordList
-
     // set adapter on recv
-    fun setAdapterOnWordRecyclerView(context: Context, recv: RecyclerView) {
-        val adapter = WordItemAdapter(getWordList(), context)
+    fun setAdapterOnWordRecyclerView(context: Context, recv: RecyclerView, wordList: ArrayList<WordItem>) {
+        val adapter = WordItemAdapter(wordList, context)
         recv.adapter = adapter
         adapter.notifyDataSetChanged()
     }

@@ -109,7 +109,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
             // endregion
 
             // add the word by words-manager
-            WordsManager.addNewWord(this, newWordItem)
+//            WordsManager.addNewWord(this, newWordItem)
 
             // add the word into the selected classifications
             mSelectedClassificationTreeSet.forEach {
@@ -183,7 +183,13 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 //            val groupNameIsCheckedArray = BooleanArray(groupNameArray.size) { idx ->
 //                mSelectedClassificationTreeSet.contains(ClassificationManager.getClassificationByGroupName(groupNameArray[idx]))
 //            }
-            var checkedGroupNameIndex = 0
+            val initialCheckedGroupNameIndex =
+                    if (mSelectedClassificationTreeSet.isEmpty()) 0
+                    else {
+                        val checkedGroupName = mSelectedClassificationTreeSet.first().getGroupName()
+                        groupNameArray.indexOf(checkedGroupName)
+                    }
+            var checkedGroupNameIndex = initialCheckedGroupNameIndex
 
             // region build and show dialog
             val builder =
@@ -195,7 +201,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                     .setPositiveButton(getString(R.string.str_confirm), null)
             else
                 builder
-                    .setSingleChoiceItems(groupNameArray, 0) { _, position ->
+                    .setSingleChoiceItems(groupNameArray, initialCheckedGroupNameIndex) { _, position ->
                         checkedGroupNameIndex = position
                     }
 //                    .setMultiChoiceItems(groupNameArray, groupNameIsCheckedArray) { _, position, isChecked ->

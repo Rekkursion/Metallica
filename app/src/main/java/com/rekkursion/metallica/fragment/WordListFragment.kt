@@ -3,6 +3,7 @@ package com.rekkursion.metallica.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,12 +70,20 @@ class WordListFragment: Fragment() {
         // endregion
 
         // region load all existed words in this classification by serialization and set adapter on recv
-        WordsManager.loadAllWordsBySerialization(this.context!!, true, mGroupName)
-        WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList)
+        mGroupName?.let { groupName ->
+            val wordList = ClassificationManager.getClassificationByGroupName(groupName)?.getWordList()
+            wordList?.let {
+                WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList, it)
+            }
+        }
+//        WordsManager.loadAllWordsBySerialization(this.context!!, true, mGroupName)
+//        WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList, ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList() ?: arrayListOf())
         // endregion
     }
 
     fun setAdapterOnWordRecyclerView() {
-        WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList)
+        mGroupName?.let {
+            WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList, ClassificationManager.getClassificationByGroupName(it)?.getWordList() ?: arrayListOf())
+        }
     }
 }

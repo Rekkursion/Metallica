@@ -90,7 +90,11 @@ class MainActivity: AppCompatActivity() {
                     .add(R.id.lly_root_at_main, mClassificationListFragment!!)
                     .commit()
             }
+            else
+                super.onBackPressed()
         }
+        else
+            super.onBackPressed()
     }
 
     private fun initViews() {

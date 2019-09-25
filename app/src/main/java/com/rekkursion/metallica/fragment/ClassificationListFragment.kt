@@ -3,6 +3,7 @@ package com.rekkursion.metallica.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,14 @@ class ClassificationListFragment: Fragment() {
         // region load all existed classifications by serialization and set adapter on recv
         ClassificationManager.loadAllClassificationsBySerialization(this.context!!, true)
         ClassificationManager.setAdapterOnClassificationRecyclerView(this.context!!, mRecvClassificationList)
+
+//        ClassificationManager.getClassificationList().forEach {
+//            Log.e("name", it.getGroupName())
+//            it.getWordList().forEach {
+//                Log.e("word", it.getEnglishWord() ?: "null")
+//            }
+//        }
+
         // endregion
     }
 
