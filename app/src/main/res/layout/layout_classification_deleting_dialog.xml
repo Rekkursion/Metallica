@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- title -->
+    <TextView
+            android:id="@+id/txtv_title_at_classification_deleting_dialog"
+            android:textSize="@dimen/dim_dialog_title_text_size"
+            android:textColor="@android:color/black"
+            android:layout_margin="@dimen/dim_dialog_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <!-- message -->
+    <TextView
+            android:id="@+id/txtv_message_at_classification_deleting_dialog"
+            android:textSize="@dimen/dim_general_text_size"
+            android:layout_marginStart="@dimen/dim_dialog_margin"
+            android:layout_marginEnd="@dimen/dim_dialog_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <!-- words deleting methods subtitle -->
+    <TextView
+            android:textSize="@dimen/dim_general_text_size"
+            android:text="@string/str_words_deleting_methods"
+            android:layout_marginStart="@dimen/dim_dialog_margin"
+            android:layout_marginEnd="@dimen/dim_dialog_margin"
+            android:layout_marginBottom="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <!-- words deleting methods -->
+    <RadioGroup
+            android:id="@+id/rdg_words_deleting_methods_at_classification_deleting_dialog"
+            android:layout_marginStart="@dimen/dim_dialog_margin"
+            android:layout_marginEnd="@dimen/dim_dialog_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <!-- move to unclassified -->
+        <RadioButton
+                android:id="@+id/rdb_words_deleting_methods_move_to_unclassified_at_classification_deleting_dialog"
+                android:textSize="@dimen/dim_general_text_size"
+                android:text="@string/str_move_to_unclassified"
+                android:checked="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <!-- move to another classification -->
+        <RadioButton
+                android:id="@+id/rdb_words_deleting_methods_move_to_another_classification_at_classification_deleting_dialog"
+                android:textSize="@dimen/dim_general_text_size"
+                android:text="@string/str_move_to_another_classification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <!-- delete permanently -->
+        <RadioButton
+                android:id="@+id/rdb_words_deleting_methods_delete_permanently_at_classification_deleting_dialog"
+                android:textSize="@dimen/dim_general_text_size"
+                android:text="@string/str_delete_permanently"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+    </RadioGroup>
+
+    <!-- choose the classification to move to -->
+    <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spn_choose_classification_to_move_to_at_classification_deleting_dialog"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <!-- cancel & submit buttons -->
+    <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle">
+
+        <Button
+                android:id="@+id/btn_cancel_at_classification_deleting_dialog"
+                android:text="@string/str_cancel"
+                android:textSize="@dimen/dim_button_bar_text_size"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+                android:id="@+id/btn_submit_at_classification_deleting_dialog"
+                android:text="@string/str_submit"
+                android:textSize="@dimen/dim_button_bar_text_size"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:attr/buttonBarButtonStyle" />
+    </LinearLayout>
+</LinearLayout>

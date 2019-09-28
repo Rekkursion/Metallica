@@ -2,8 +2,11 @@ package com.rekkursion.metallica.manager
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainer
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.fragment.WordListFragment
 import com.rekkursion.metallica.model.ClassificationItem
+import com.rekkursion.metallica.view.ClassificationDeletingDialog
 import java.lang.StringBuilder
 
 object OperationManager {
@@ -28,7 +32,7 @@ object OperationManager {
                 else {
                     if (classificationGroupNameOrWordName == context.getString(R.string.str_unclassified))
                         context.resources.getStringArray(R.array.strarr_classification_operations)
-                            .filter { it != "重新命名" && it != "刪除分類" }.toTypedArray()
+                            .filter { it != "重新命名" }.toTypedArray()
                     else
                         context.resources.getStringArray(R.array.strarr_classification_operations)
                 }
@@ -45,6 +49,9 @@ object OperationManager {
                     "重新命名" -> ClassificationManager.getClassificationByGroupName(classificationGroupNameOrWordName)?.let {
                         buildRenamingDialog(fragment.context!!, it, recv)
                     }
+                    "刪除分類" -> ClassificationManager.getClassificationByGroupName(classificationGroupNameOrWordName)?.let {
+                        buildDeletingDialog(fragment.context!!, it, recv)
+                    }
                     // endregion
                 }
 
@@ -53,6 +60,7 @@ object OperationManager {
             .show()
     }
 
+    // 分類操作：進入分類
     fun enterClassification(fragment: Fragment, classificationGroupName: String) {
         val wordListFragment = WordListFragment.newInstance(classificationGroupName)
         fragment.fragmentManager
@@ -62,6 +70,7 @@ object OperationManager {
             ?.commit()
     }
 
+    // 分類操作：分類信息
     private fun buildInformationDialog(context: Context, classification: ClassificationItem) {
         val sBuf = StringBuilder()
         sBuf.append("建立於 ", classification.getLocalDateTimeStr(), "\n")
@@ -75,6 +84,7 @@ object OperationManager {
             .show()
     }
 
+    // 分類操作：重新命名
     private fun buildRenamingDialog(context: Context, classification: ClassificationItem, recv: RecyclerView) {
         // input-method-manager for showing the keyboard automatically
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -134,5 +144,24 @@ object OperationManager {
         }
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
+    }
+
+    // 分類操作：刪除分類
+    private fun buildDeletingDialog(context: Context, classification: ClassificationItem, recv: RecyclerView) {
+        // dialog
+        val dialog = ClassificationDeletingDialog(
+            context,
+            classification,
+            "確定要刪除「${classification.getGroupName()}」嗎？"
+        )
+
+        // set submit-listener and show
+        dialog
+            .setOnSubmitClickListener(object: ClassificationDeletingDialog.OnSubmitClickListener {
+                override fun onSubmitClick(wordsDeletingMethod: ClassificationDeletingDialog.WordsDeletingMethod, moveToWhere: String?) {
+                    // TODO: submit the classification deletion
+                }
+            })
+            .show()
     }
 }

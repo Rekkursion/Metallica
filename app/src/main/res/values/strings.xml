@@ -38,6 +38,8 @@
     <string name="str_no_classification_yet">還沒有任何分類喔</string>
     <string name="str_or">或</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_move_to_unclassified">移至「未分類」</string>
+    <string name="str_move_to_another_classification">移至其他分類</string>
+    <string name="str_delete_permanently">永久刪除（無法復原）</string>
+    <string name="str_words_deleting_methods">分類內的單字該如何處理呢？</string>
 </resources>
