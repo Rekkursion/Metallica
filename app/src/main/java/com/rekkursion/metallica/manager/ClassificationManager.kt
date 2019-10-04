@@ -7,6 +7,7 @@ import com.rekkursion.metallica.R
 import com.rekkursion.metallica.adapter.ClassificationItemAdapter
 import com.rekkursion.metallica.model.ClassificationItem
 import com.rekkursion.metallica.model.WordItem
+import com.rekkursion.metallica.view.ClassificationDeletingDialog
 import java.io.File
 
 object ClassificationManager {
@@ -22,6 +23,7 @@ object ClassificationManager {
         serialOut(context)
     }
 
+    // add the word into certain classification
     fun addWordIntoClassification(context: Context, classification: ClassificationItem, word: WordItem): Boolean {
         mClassificationList.forEach {
             if (it == classification)
@@ -41,6 +43,38 @@ object ClassificationManager {
             mClassificationList[idx].setGroupName(newGroupName)
             serialOut(context)
         }
+    }
+
+    // delete certain classification
+    fun deleteClassification(context: Context, classification: ClassificationItem, wordsDeletingMethod: ClassificationDeletingDialog.WordsDeletingMethod, moveToWhere: String?) {
+        val wordsDestinationGroupName: String? =
+            when (wordsDeletingMethod) {
+                ClassificationDeletingDialog.WordsDeletingMethod.MOVE_TO_UNCLASSIFIED -> context.getString(R.string.str_unclassified)
+                ClassificationDeletingDialog.WordsDeletingMethod.MOVE_TO_ANOTHER_CLASSIFICATION -> moveToWhere ?: classification.getGroupName()
+                else -> null
+            }
+
+        // 確定不要永久刪除，且目的地與原來的不一樣，才執行移動單字的動作
+        if (wordsDestinationGroupName != null && wordsDestinationGroupName != classification.getGroupName()) {
+            var destinationItem = getClassificationByGroupName(wordsDestinationGroupName)
+            if (destinationItem == null)
+                addNewClassification(context, ClassificationItem(wordsDestinationGroupName))
+            destinationItem = getClassificationByGroupName(wordsDestinationGroupName)
+            
+            destinationItem?.getWordList()?.addAll(classification.getWordList())
+        }
+
+        // delete the classification from the list
+        mClassificationList.remove(classification)
+
+        // serial out
+        serialOut(context)
+    }
+
+    // delete all words in certain classification
+    fun deleteAllWordsInCertainClassification(context: Context, classification: ClassificationItem) {
+        classification.getWordList().clear()
+        serialOut(context)
     }
 
     // load all classifications by serialization

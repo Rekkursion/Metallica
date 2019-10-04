@@ -159,7 +159,8 @@ object OperationManager {
         dialog
             .setOnSubmitClickListener(object: ClassificationDeletingDialog.OnSubmitClickListener {
                 override fun onSubmitClick(wordsDeletingMethod: ClassificationDeletingDialog.WordsDeletingMethod, moveToWhere: String?) {
-                    // TODO: submit the classification deletion
+                    ClassificationManager.deleteClassification(context, classification, wordsDeletingMethod, moveToWhere)
+                    ClassificationManager.setAdapterOnClassificationRecyclerView(context, recv)
                 }
             })
             .show()
