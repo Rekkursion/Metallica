@@ -3,7 +3,6 @@ package com.rekkursion.metallica.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -24,6 +23,8 @@ class MainActivity: AppCompatActivity() {
         private val TAG: String = MainActivity::class.java.simpleName
         private const val RC_TO_WORD_ADDING_ACTIVITY: Int = 4731
         private const val RC_TO_CLASSIFICATION_ADDING_ACTIVITY: Int = 5371
+
+        private enum class FragmentEnum { WORD_LIST, CLASSIFICATION_LIST }
     }
 
     private lateinit var mFabAddNewWordOrClassification: FloatingActionButton
@@ -66,8 +67,13 @@ class MainActivity: AppCompatActivity() {
         when (requestCode) {
             RC_TO_WORD_ADDING_ACTIVITY -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
-                    mClassificationListFragment?.setAdapterOnClassificationRecyclerView()
+                    Snackbar.make(mFabAddNewWordOrClassification, getString(R.string.str_add_new_word_or_classification_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_OR_EDITED_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
+
+                    val atWhichFragment = currentlyAtWhichFragment()
+                    if (atWhichFragment == Companion.FragmentEnum.WORD_LIST)
+                        (supportFragmentManager.fragments[0] as WordListFragment).setAdapterOnWordRecyclerView()
+                    else
+                        mClassificationListFragment?.setAdapterOnClassificationRecyclerView()
                 }
             }
 
@@ -81,17 +87,13 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.fragments.isNotEmpty()) {
-            if (supportFragmentManager.fragments[0]::class.java.simpleName == WordListFragment::class.java.simpleName) {
-                mClassificationListFragment = ClassificationListFragment.newInstance()
-                supportFragmentManager
-                    .beginTransaction()
-                    .detach(supportFragmentManager.fragments[0])
-                    .add(R.id.lly_root_at_main, mClassificationListFragment!!)
-                    .commit()
-            }
-            else
-                super.onBackPressed()
+        if (currentlyAtWhichFragment() == Companion.FragmentEnum.WORD_LIST) {
+            mClassificationListFragment = ClassificationListFragment.newInstance()
+            supportFragmentManager
+                .beginTransaction()
+                .detach(supportFragmentManager.fragments[0])
+                .add(R.id.lly_root_at_main, mClassificationListFragment!!)
+                .commit()
         }
         else
             super.onBackPressed()
@@ -116,10 +118,23 @@ class MainActivity: AppCompatActivity() {
                 .setOnAddNewWordListener(object: WhatToAddDialog.OnAddNewWordListener {
                     override fun onAddNewWordClick() {
                         val toWordAddingIntent = Intent(this@MainActivity, WordAddingActivity::class.java)
+                        WordAddingActivity.oldWord = null
                         startActivityForResult(toWordAddingIntent, RC_TO_WORD_ADDING_ACTIVITY)
                     }
                 })
                 .show()
         }
     }
+
+    // region private fun currently-at-which-fragment()
+    private fun currentlyAtWhichFragment(): FragmentEnum =
+        if (supportFragmentManager.fragments.isNotEmpty()) {
+            if (supportFragmentManager.fragments[0]::class.java.simpleName == WordListFragment::class.java.simpleName)
+                Companion.FragmentEnum.WORD_LIST
+            else
+                Companion.FragmentEnum.CLASSIFICATION_LIST
+        }
+        else
+            Companion.FragmentEnum.CLASSIFICATION_LIST
+    // endregion
 }

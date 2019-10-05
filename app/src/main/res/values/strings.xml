@@ -26,6 +26,7 @@
     <string name="str_submit">送出</string>
     <string name="str_confirm">確認</string>
     <string name="str_add_new_word_or_classification_successfully">成功加入</string>
+    <string name="str_edit_word_successfully">成功編輯</string>
 
     <string name="str_add_new_word">新增單字</string>
     <string name="str_add_new_classification">新增分類</string>

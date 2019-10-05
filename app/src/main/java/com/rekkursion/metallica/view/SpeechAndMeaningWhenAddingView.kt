@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.core.view.forEach
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.model.WordItem
 
@@ -54,6 +55,11 @@ class SpeechAndMeaningWhenAddingView(context: Context, attrs: AttributeSet? = nu
     }
 
     fun getObjectIndex(): Int = mObjectIndex
+
+    fun setSpeechAndMeaning(speech: WordItem.PartOfSpeech, meaning: String) {
+        mSpnSpeech.setSelection(WordItem.PartOfSpeech.values().indexOf(speech))
+        mEdtMeaning.setText(meaning)
+    }
 
     fun setOnDeleteViewButtonClickListener(listener: OnDeleteViewButtonClickListener) {
         mOnDeleteViewButtonClickListener = listener

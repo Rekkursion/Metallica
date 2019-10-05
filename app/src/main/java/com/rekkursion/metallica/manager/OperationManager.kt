@@ -2,6 +2,7 @@ package com.rekkursion.metallica.manager
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentContainer
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.R
+import com.rekkursion.metallica.activity.WordAddingActivity
 import com.rekkursion.metallica.fragment.WordListFragment
 import com.rekkursion.metallica.model.ClassificationItem
 import com.rekkursion.metallica.model.WordItem
@@ -60,7 +62,13 @@ object OperationManager {
 
                     }
                     "編輯單字" -> {
-
+                        classificationForDeletingWord?.let { classification ->
+                            wordPositionForDeletingWord?.let { position ->
+                                val toWordAddingIntent = Intent(context, WordAddingActivity::class.java)
+                                WordAddingActivity.oldWord = classification.getWordList()[position]
+                                fragment.startActivityForResult(toWordAddingIntent, WordListFragment.RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST)
+                            }
+                        }
                     }
                     "刪除單字" -> {
                         classificationForDeletingWord?.let { classification ->

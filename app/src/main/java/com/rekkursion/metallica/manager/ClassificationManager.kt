@@ -9,6 +9,7 @@ import com.rekkursion.metallica.model.ClassificationItem
 import com.rekkursion.metallica.model.WordItem
 import com.rekkursion.metallica.view.ClassificationDeletingDialog
 import java.io.File
+import java.time.LocalDateTime
 
 object ClassificationManager {
     const val NEW_CLASSIFICATION_FIELD: String = "new_classification"
@@ -43,6 +44,30 @@ object ClassificationManager {
             mClassificationList[idx].setGroupName(newGroupName)
             serialOut(context)
         }
+    }
+
+    // delete a certain word in certain classification
+    fun editWord(context: Context, classification: ClassificationItem, oldWord: WordItem, newWord: WordItem) {
+        classification.getWordList().forEach {
+            if (it == oldWord) {
+                it.setEnglishWord(newWord.getEnglishWord()!!)
+                it.setPartOfSpeechList(newWord.getPartOfSpeechList()!!)
+                it.setChineseMeaningList(newWord.getChineseMeaningList()!!)
+                it.setRemark(newWord.getRemark()!!)
+                it.setDifficulty(newWord.getDifficulty()!!)
+                it.setLocalDateTime(LocalDateTime.now())
+
+                val oldClassification = oldWord.getClassificationList()?.get(0)
+                val newClassification = newWord.getClassificationList()?.get(0)
+                if (oldClassification != null && newClassification != null &&
+                        oldClassification.getGroupName() != newClassification.getGroupName()) {
+                    it.setClassificationList(newWord.getClassificationList()!!)
+                    deleteWordInCertainClassification(context, oldClassification, oldWord)
+                    addWordIntoClassification(context, newClassification, it)
+                }
+            }
+        }
+        serialOut(context)
     }
 
     // delete certain classification
@@ -80,6 +105,12 @@ object ClassificationManager {
     // delete a certain word in certain classification
     fun deleteWordInCertainClassification(context: Context, classification: ClassificationItem, wordPosition: Int) {
         classification.getWordList().removeAt(wordPosition)
+        serialOut(context)
+    }
+
+    // delete a certain word in certain classification
+    fun deleteWordInCertainClassification(context: Context, classification: ClassificationItem, wordItem: WordItem) {
+        classification.getWordList().remove(wordItem)
         serialOut(context)
     }
 

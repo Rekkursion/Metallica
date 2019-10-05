@@ -21,6 +21,12 @@ import kotlin.collections.ArrayList
 
 
 class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
+    companion object {
+        var oldWord: WordItem? = null
+    }
+
+    private val mIsNewWord: Boolean = oldWord == null
+
     private lateinit var mEdtEnglishWord: EditText
     private lateinit var mEdtRemark: EditText
     private lateinit var mSkbDifficulty: AppCompatSeekBar
@@ -37,6 +43,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
     private lateinit var mBtnCancel: Button
     private lateinit var mBtnSubmit: Button
 
+    // listener of changing the word's difficulty
     private val mOnDifficultySeekBarChangeListener = object: SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, isFromUser: Boolean) {
             mTxtvShowSelectedDifficulty.text =
@@ -60,8 +67,11 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
         initViews()
         initEvents()
+        // init-data 必須放在 init-events 後面
+        initData()
     }
 
+    // btn-cancel and btn-submit allowed only
     override fun onClick(view: View?) {
         // illegal buttons clicked, return directly
         if (view?.id != R.id.btn_cancel_when_adding_word && view?.id != R.id.btn_submit_when_adding_word)
@@ -69,7 +79,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
         // if submitting
         if (view.id == R.id.btn_submit_when_adding_word) {
-            // build the speeches and meanings lists
+            // region build the speeches and meanings lists
             val speechList = ArrayList<WordItem.PartOfSpeech>()
             val meaningList = ArrayList<String>()
 
@@ -86,8 +96,8 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 
                 ++k
             }
+            // endregion
 
-            // region new word-item
             // 沒有加入任何分類，則加入「未分類」分類
             if (mSelectedClassificationTreeSet.isEmpty()) {
                 // 還沒有「未分類」分類，新增「未分類」分類
@@ -98,6 +108,7 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
                 unclassifiedClassification?.let { mSelectedClassificationTreeSet.add(it) }
             }
 
+            // region 建立新的 word-item
             val newWordItem = WordItem(
                 mEdtEnglishWord.text.toString(),
                 speechList,
@@ -108,18 +119,24 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
             )
             // endregion
 
-            // add the word by words-manager
-//            WordsManager.addNewWord(this, newWordItem)
+            // 編輯舊單字
+            if (!mIsNewWord && oldWord != null && oldWord?.getClassificationList() != null && oldWord?.getClassificationList()?.size!! > 0) {
+                val classification = oldWord!!.getClassificationList()!![0]
+                ClassificationManager.editWord(this, classification, oldWord!!, newWordItem)
+            }
 
-            // add the word into the selected classifications
-            mSelectedClassificationTreeSet.forEach {
-                ClassificationManager.addWordIntoClassification(this, it, newWordItem)
+            // 新增新單字
+            else if (mIsNewWord) {
+                // add the word into the selected classifications
+                mSelectedClassificationTreeSet.forEach {
+                    ClassificationManager.addWordIntoClassification(this, it, newWordItem)
+                }
             }
         }
 
         // set result and finish
         val dataIntent = Intent()
-        dataIntent.putExtra(WordsManager.NEW_WORD_FIELD, mEdtEnglishWord.text.toString())
+        dataIntent.putExtra(WordsManager.NEW_WORD_OR_EDITED_WORD_FIELD, mEdtEnglishWord.text.toString())
         setResult(if (view.id == R.id.btn_cancel_when_adding_word) Activity.RESULT_CANCELED else Activity.RESULT_OK, dataIntent)
         finish()
     }
@@ -141,35 +158,68 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
         mBtnSubmit = findViewById(R.id.btn_submit_when_adding_word)
     }
 
+    private fun initData() {
+        // is editing the old word
+        if (!mIsNewWord) {
+            // word name (english)
+            mEdtEnglishWord.setText(oldWord?.getEnglishWord() ?: "")
+
+            // remarks
+            mEdtRemark.setText(oldWord?.getRemark() ?: "")
+
+            // difficulty
+            mSkbDifficulty.progress = oldWord?.getDifficulty() ?: 1
+
+            // region part-of-speeches and meanings
+            val numOfMeanings = oldWord?.getChineseMeaningList()?.size ?: 0
+            val numOfSpeechAndMeaningWhenAddingViews = mLlySpeechesAndMeaningsContainer.childCount
+            var noViewExistsYet = numOfSpeechAndMeaningWhenAddingViews == 0
+
+            for (counter in 0 until numOfMeanings) {
+                val speech = oldWord?.getPartOfSpeechList()?.get(counter)
+                val meaning = oldWord?.getChineseMeaningList()?.get(counter)
+
+                // speech-and-meaning-when-adding-view 已經存在，修改 UI 的值
+                if (counter < numOfSpeechAndMeaningWhenAddingViews) {
+                    val speechAndMeaningWhenAddingView = mLlySpeechesAndMeaningsContainer.getChildAt(counter) as SpeechAndMeaningWhenAddingView
+                    speech?.let { it_speech ->
+                        meaning?.let { it_meaning ->
+                            speechAndMeaningWhenAddingView.setSpeechAndMeaning(it_speech, it_meaning)
+                        }
+                    }
+                }
+
+                // 沒有了，需要新增
+                else {
+                    if (noViewExistsYet) {
+                        addNewSpeechAndMeaningWhenAddingView(this.getString(R.string.str_part_of_speech_and_chinese_meaning), false, speech, meaning)
+                        noViewExistsYet = false
+                    }
+                    else
+                        addNewSpeechAndMeaningWhenAddingView("", true, speech, meaning)
+                }
+            }
+            // endregion
+
+            // region classification
+            oldWord?.getClassificationList()
+                ?.filter { it.getGroupName() != getString(R.string.str_unclassified) }
+                ?.forEach { addNewClassificationView(it.getGroupName()) }
+            // endregion
+        }
+    }
+
     private fun initEvents() {
         // cancel & submit
         mBtnCancel.setOnClickListener(this)
         mBtnSubmit.setOnClickListener(this)
 
-        // listener of deleting the speech-and-meaning view
-        val onDeleteSpeechAndMeaningWhenAddingViewListener = object: SpeechAndMeaningWhenAddingView.OnDeleteViewButtonClickListener {
-            override fun onDeleteViewButtonClick(objectIndex: Int) {
-                var k = 0
-                while (k < mLlySpeechesAndMeaningsContainer.childCount) {
-                    if ((mLlySpeechesAndMeaningsContainer.getChildAt(k) as SpeechAndMeaningWhenAddingView).getObjectIndex() == objectIndex) {
-                        mLlySpeechesAndMeaningsContainer.removeViewAt(k)
-                        break
-                    }
-                    ++k
-                }
-            }
-        }
-
         // add the first speech-and-meaning-view
-        val firstSpeechAndMeaningView = SpeechAndMeaningWhenAddingView(this, labelName = this.getString(R.string.str_part_of_speech_and_chinese_meaning), showDeleteButton = false)
-        firstSpeechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
-        mLlySpeechesAndMeaningsContainer.addView(firstSpeechAndMeaningView)
+        addNewSpeechAndMeaningWhenAddingView(this.getString(R.string.str_part_of_speech_and_chinese_meaning), false)
 
         // event of adding new speech and meaning
         mBtnAddNewSpeechAndMeaning.setOnClickListener {
-            val speechAndMeaningView = SpeechAndMeaningWhenAddingView(this, labelName = "")
-            speechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
-            mLlySpeechesAndMeaningsContainer.addView(speechAndMeaningView)
+            addNewSpeechAndMeaningWhenAddingView("", true)
         }
 
         // seek-bar of difficulty changed
@@ -208,26 +258,67 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 //                        groupNameIsCheckedArray[position] = isChecked
 //                    }
                     .setPositiveButton(this.getString(R.string.str_submit)) { _, _ ->
-                        // remove all items and views
-                        mSelectedClassificationTreeSet.clear()
-                        mLlySelectedClassificationsContainer.removeAllViews()
+                        // 新增 classification-entry view
+                        addNewClassificationView(groupNameArray[checkedGroupNameIndex])
+                    }
+                    .setNegativeButton(this.getString(R.string.str_cancel), null)
+            builder.create().show()
+            // endregion
+        }
 
-                        val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[checkedGroupNameIndex])
-                        classificationItem?.let {
-                            val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = groupNameArray[checkedGroupNameIndex])
+        // add new classification
+        mBtnAddNewClassification.setOnClickListener {
+            // TODO: add new classification when adding new word
+        }
+    }
 
-                            classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
-                                override fun onDeleteViewButtonClick(objectIndex: Int) {
-                                    mSelectedClassificationTreeSet.remove(it)
-                                    mLlySelectedClassificationsContainer.removeView(classificationEntryView)
-                                }
-                            })
+    // 新增一個用來「新增詞性及意義」的 view
+    private fun addNewSpeechAndMeaningWhenAddingView(labelName: String, showDeleteButton: Boolean, speech: WordItem.PartOfSpeech? = null, meaning: String? = null) {
+        // listener of deleting the speech-and-meaning view
+        val onDeleteSpeechAndMeaningWhenAddingViewListener = object: SpeechAndMeaningWhenAddingView.OnDeleteViewButtonClickListener {
+            override fun onDeleteViewButtonClick(objectIndex: Int) {
+                var k = 0
+                while (k < mLlySpeechesAndMeaningsContainer.childCount) {
+                    if ((mLlySpeechesAndMeaningsContainer.getChildAt(k) as SpeechAndMeaningWhenAddingView).getObjectIndex() == objectIndex) {
+                        mLlySpeechesAndMeaningsContainer.removeViewAt(k)
+                        break
+                    }
+                    ++k
+                }
+            }
+        }
 
-                            mSelectedClassificationTreeSet.add(it)
-                            mLlySelectedClassificationsContainer.addView(classificationEntryView)
-                        }
+        val speechAndMeaningView = SpeechAndMeaningWhenAddingView(this, labelName = labelName, showDeleteButton = showDeleteButton)
+        speechAndMeaningView.setOnDeleteViewButtonClickListener(onDeleteSpeechAndMeaningWhenAddingViewListener)
 
-                        // region add views which are checked
+        if (speech != null && meaning != null)
+            speechAndMeaningView.setSpeechAndMeaning(speech, meaning)
+
+        mLlySpeechesAndMeaningsContainer.addView(speechAndMeaningView)
+    }
+
+    // 新增分類的 entry view
+    private fun addNewClassificationView(selectedGroupName: String) {
+        // remove all items and views
+        mSelectedClassificationTreeSet.clear()
+        mLlySelectedClassificationsContainer.removeAllViews()
+
+        val classificationItem = ClassificationManager.getClassificationByGroupName(selectedGroupName)
+        classificationItem?.let {
+            val classificationEntryView = ClassificationEntryWhenAddingWordView(this, groupName = selectedGroupName)
+
+            classificationEntryView.setOnDeleteViewButtonClickListener(object: ClassificationEntryWhenAddingWordView.OnDeleteViewButtonClickListener {
+                override fun onDeleteViewButtonClick(objectIndex: Int) {
+                    mSelectedClassificationTreeSet.remove(it)
+                    mLlySelectedClassificationsContainer.removeView(classificationEntryView)
+                }
+            })
+
+            mSelectedClassificationTreeSet.add(it)
+            mLlySelectedClassificationsContainer.addView(classificationEntryView)
+        }
+
+        // region add views which are checked
 //                        groupNameIsCheckedArray.forEachIndexed { index, isChecked ->
 //                            if (isChecked) {
 //                                val classificationItem = ClassificationManager.getClassificationByGroupName(groupNameArray[index])
@@ -248,16 +339,6 @@ class WordAddingActivity: AppCompatActivity(), View.OnClickListener {
 //                                }
 //                            }
 //                        }
-                        // endregion
-                    }
-                    .setNegativeButton(this.getString(R.string.str_cancel), null)
-            builder.create().show()
-            // endregion
-        }
-
-        // add new classification
-        mBtnAddNewClassification.setOnClickListener {
-            // TODO: add new classification when adding new word
-        }
+        // endregion
     }
 }

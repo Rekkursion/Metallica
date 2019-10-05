@@ -9,7 +9,7 @@ import com.rekkursion.metallica.model.WordItem
 import java.io.File
 
 object WordsManager {
-    const val NEW_WORD_FIELD: String = "new_word"
+    const val NEW_WORD_OR_EDITED_WORD_FIELD: String = "new_word"
 
     // set adapter on recv
     fun setAdapterOnWordRecyclerView(context: Context, recv: RecyclerView, wordList: ArrayList<WordItem>) {
