@@ -60,7 +60,7 @@ object ClassificationManager {
             if (destinationItem == null)
                 addNewClassification(context, ClassificationItem(wordsDestinationGroupName))
             destinationItem = getClassificationByGroupName(wordsDestinationGroupName)
-            
+
             destinationItem?.getWordList()?.addAll(classification.getWordList())
         }
 
@@ -74,6 +74,12 @@ object ClassificationManager {
     // delete all words in certain classification
     fun deleteAllWordsInCertainClassification(context: Context, classification: ClassificationItem) {
         classification.getWordList().clear()
+        serialOut(context)
+    }
+
+    // delete a certain word in certain classification
+    fun deleteWordInCertainClassification(context: Context, classification: ClassificationItem, wordPosition: Int) {
+        classification.getWordList().removeAt(wordPosition)
         serialOut(context)
     }
 

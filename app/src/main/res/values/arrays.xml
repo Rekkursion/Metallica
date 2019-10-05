@@ -8,7 +8,7 @@
     </string-array>
 
     <string-array name="strarr_word_operations">
-        <item>單字信息</item>
+        <item>詳細內容</item>
         <item>編輯單字</item>
         <item>刪除單字</item>
     </string-array>

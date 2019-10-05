@@ -67,7 +67,9 @@ class WordListFragment: Fragment() {
                             this@WordListFragment,
                             mRecvWordList,
                             OperationManager.OperatedObject.WORD,
-                            ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList()?.get(position)?.getEnglishWord()!!
+                            ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList()?.get(position)?.getEnglishWord()!!,
+                            ClassificationManager.getClassificationByGroupName(mGroupName!!),
+                            position
                         )
                     }
                 }

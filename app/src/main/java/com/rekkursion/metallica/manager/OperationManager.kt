@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.rekkursion.metallica.R
 import com.rekkursion.metallica.fragment.WordListFragment
 import com.rekkursion.metallica.model.ClassificationItem
+import com.rekkursion.metallica.model.WordItem
 import com.rekkursion.metallica.view.ClassificationDeletingDialog
 import java.lang.StringBuilder
 
@@ -24,7 +25,7 @@ object OperationManager {
     }
 
     // 當使用者長按某個列表元素，則跳出操作該元素的 dialog。
-    fun buildItemOperatingDialog(fragment: Fragment, recv: RecyclerView, operatedObject: OperatedObject, classificationGroupNameOrWordName: String) {
+    fun buildItemOperatingDialog(fragment: Fragment, recv: RecyclerView, operatedObject: OperatedObject, classificationGroupNameOrWordName: String, classificationForDeletingWord: ClassificationItem? = null, wordPositionForDeletingWord: Int? = null) {
         val context = fragment.context!!
         val operationArray =
                 if (operatedObject == OperationManager.OperatedObject.WORD)
@@ -51,6 +52,22 @@ object OperationManager {
                     }
                     "刪除分類" -> ClassificationManager.getClassificationByGroupName(classificationGroupNameOrWordName)?.let {
                         buildDeletingDialog(fragment.context!!, it, recv)
+                    }
+                    // endregion
+
+                    // region 單字的操作
+                    "詳細內容" -> {
+
+                    }
+                    "編輯單字" -> {
+
+                    }
+                    "刪除單字" -> {
+                        classificationForDeletingWord?.let { classification ->
+                            wordPositionForDeletingWord?.let { position ->
+                                buildDeletingDialog(context, classification, position, recv)
+                            }
+                        }
                     }
                     // endregion
                 }
@@ -159,10 +176,41 @@ object OperationManager {
         dialog
             .setOnSubmitClickListener(object: ClassificationDeletingDialog.OnSubmitClickListener {
                 override fun onSubmitClick(wordsDeletingMethod: ClassificationDeletingDialog.WordsDeletingMethod, moveToWhere: String?) {
+                    val groupName = classification.getGroupName()
+
                     ClassificationManager.deleteClassification(context, classification, wordsDeletingMethod, moveToWhere)
                     ClassificationManager.setAdapterOnClassificationRecyclerView(context, recv)
+
+                    // tell user that deleted successfully through snack-bar
+                    Snackbar.make(recv, "分類「$groupName」刪除成功。", Snackbar.LENGTH_SHORT).show()
                 }
             })
+            .show()
+    }
+
+    // 單字操作：詳細內容
+    //
+
+    // 單字操作：編輯單字
+    //
+
+    // 單字操作：刪除單字
+    private fun buildDeletingDialog(context: Context, classification: ClassificationItem, wordPosition: Int, recv: RecyclerView) {
+        val wordName = classification.getWordList()[wordPosition].getEnglishWord() ?: return
+
+        // dialog
+        AlertDialog.Builder(context)
+            .setTitle("即將刪除單字：$wordName")
+            .setMessage("確定要永久刪除該單字嗎？此動作將無法復原。")
+            .setPositiveButton(context.getString(R.string.str_submit)) { _, _ ->
+                ClassificationManager.deleteWordInCertainClassification(context, classification, wordPosition)
+                WordsManager.setAdapterOnWordRecyclerView(context, recv, classification.getWordList())
+
+                // tell user that deleted successfully through snack-bar
+                Snackbar.make(recv, "單字 $wordName 刪除成功。", Snackbar.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(context.getString(R.string.str_cancel), null)
+            .create()
             .show()
     }
 }
