@@ -55,7 +55,8 @@ object ClassificationManager {
                 it.setChineseMeaningList(newWord.getChineseMeaningList()!!)
                 it.setRemark(newWord.getRemark()!!)
                 it.setDifficulty(newWord.getDifficulty()!!)
-                it.setLocalDateTime(LocalDateTime.now())
+                // 設置最後一次編輯的時間
+                it.setLastModifiedLocalDateTime(LocalDateTime.now())
 
                 val oldClassification = oldWord.getClassificationList()?.get(0)
                 val newClassification = newWord.getClassificationList()?.get(0)

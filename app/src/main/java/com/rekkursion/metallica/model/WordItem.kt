@@ -13,9 +13,9 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
         VERB("v", "動詞"),
         TRANSITIVE_VERB("vt", "及物動詞"),
         INTRANSITIVE_VERB("vi", "不及物動詞"),
+        ADJECTIVE("a", "形容詞"),
         ADVERB("adv", "副詞"),
         PHRASE("phr", "片語"),
-        ADJECTIVE("a", "形容詞"),
         PREPOSITION("prep", "介係詞"),
         CONJUNCTION("conj", "連接詞"),
         PRONOUN("pron", "代名詞"),
@@ -37,8 +37,10 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
     private var mChineseMeaningList: ArrayList<String>? = chiList
     private var mRemark: String? = rmk
     private var mLocalDateTime: LocalDateTime = LocalDateTime.now()
+    private var mLastModifiedLocalDateTime: LocalDateTime = LocalDateTime.now()
     private var mDifficulty: Int? = diff
     private var mClassificationList: ArrayList<ClassificationItem>? = classificationList
+    private var mChaKanCounter: Int = 1
 
     fun getEnglishWord(): String? = mEnglishWord
     fun setEnglishWord(eng: String) { mEnglishWord = eng }
@@ -56,9 +58,16 @@ class WordItem(eng: String, speechList: ArrayList<PartOfSpeech>? = null, chiList
     fun getLocalDateTimeStr(): String? = mLocalDateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
     fun setLocalDateTime(date: LocalDateTime) { mLocalDateTime = date }
 
+    fun getLastModifiedLocalDateTime(): LocalDateTime? = mLastModifiedLocalDateTime
+    fun getLastModifiedLocalDateTimeStr(): String? = mLastModifiedLocalDateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_PATTERN))
+    fun setLastModifiedLocalDateTime(date: LocalDateTime) { mLastModifiedLocalDateTime = date }
+
     fun getDifficulty(): Int? = mDifficulty
     fun setDifficulty(diff: Int) { mDifficulty = diff }
 
     fun getClassificationList(): ArrayList<ClassificationItem>? = mClassificationList
     fun setClassificationList(classificationList: ArrayList<ClassificationItem>) { mClassificationList = classificationList }
+
+    fun getChakanCounter(): Int? = mChaKanCounter
+    fun addChakanCounts(increment: Int = 1) { mChaKanCounter += increment }
 }

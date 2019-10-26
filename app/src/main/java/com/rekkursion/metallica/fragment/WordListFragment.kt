@@ -1,5 +1,6 @@
 package com.rekkursion.metallica.fragment
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +25,7 @@ class WordListFragment: Fragment() {
         val TAG: String = WordListFragment::class.java.simpleName
 
         const val RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST: Int = 8620
+        const val RC_TO_WORD_DETAILS_ACTIVITY_AT_WORD_LIST: Int = 10037
 
         // new instance of word-list-fragment
         fun newInstance(groupName: String): WordListFragment {
@@ -47,10 +49,15 @@ class WordListFragment: Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST) {
-            Snackbar.make(mRecvWordList, getString(R.string.str_edit_word_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_OR_EDITED_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
-            WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList,
-                ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList()!!)
+
+        when (requestCode) {
+            RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST -> {
+                if (resultCode == RESULT_OK) {
+                    Snackbar.make(mRecvWordList, getString(R.string.str_edit_word_successfully) + " " + data?.getStringExtra(WordsManager.NEW_WORD_OR_EDITED_WORD_FIELD), Snackbar.LENGTH_SHORT).show()
+                    WordsManager.setAdapterOnWordRecyclerView(this.context!!, mRecvWordList,
+                        ClassificationManager.getClassificationByGroupName(mGroupName!!)?.getWordList()!!)
+                }
+            }
         }
     }
 

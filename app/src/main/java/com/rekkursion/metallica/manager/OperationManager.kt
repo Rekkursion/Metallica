@@ -64,9 +64,7 @@ object OperationManager {
                     "編輯單字" -> {
                         classificationForDeletingWord?.let { classification ->
                             wordPositionForDeletingWord?.let { position ->
-                                val toWordAddingIntent = Intent(context, WordAddingActivity::class.java)
-                                WordAddingActivity.oldWord = classification.getWordList()[position]
-                                fragment.startActivityForResult(toWordAddingIntent, WordListFragment.RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST)
+                                goToWordAddingActivityForEditingTheWord(fragment, classification, position)
                             }
                         }
                     }
@@ -197,10 +195,17 @@ object OperationManager {
     }
 
     // 單字操作：詳細內容
-    //
+    private fun goToWordDetailsActivity(fragment: Fragment, classification: ClassificationItem, wordPosition: Int) {
+        //val toWordDetailsIntent = Intent(fragment.context, WordAddingActivity::class.java)
+        // TODO: word details
+    }
 
     // 單字操作：編輯單字
-    //
+    private fun goToWordAddingActivityForEditingTheWord(fragment: Fragment, classification: ClassificationItem, wordPosition: Int) {
+        val toWordAddingIntent = Intent(fragment.context, WordAddingActivity::class.java)
+        WordAddingActivity.oldWord = classification.getWordList()[wordPosition]
+        fragment.startActivityForResult(toWordAddingIntent, WordListFragment.RC_TO_WORD_ADDING_ACTIVITY_AT_WORD_LIST)
+    }
 
     // 單字操作：刪除單字
     private fun buildDeletingDialog(context: Context, classification: ClassificationItem, wordPosition: Int, recv: RecyclerView) {
